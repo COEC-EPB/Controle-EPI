@@ -443,6 +443,16 @@ async function carregarDashboard(){
             `${API}/dashboard`
         );
 
+        if (!resp.ok) {
+
+    console.error(
+        "Erro API:",
+        await resp.text()
+            );
+        
+            return;
+        }
+        
         const dados =
         await resp.json();
 
