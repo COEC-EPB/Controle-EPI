@@ -10,386 +10,412 @@
 
 <style>
 
-:root{
-    --azul:#0097CE;
-    --azulEscuro:#0079A6;
-    --laranja:#F36F21;
-    --cinza:#f4f7fa;
+.layout{
+    display:flex;
+    min-height:100vh;
 }
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+.sidebar{
+    width:260px;
+    background:#0097CE;
+    color:white;
+    padding:25px;
 }
 
-body{
-    background:var(--cinza);
-    font-family:"Segoe UI",sans-serif;
+.sidebar h2{
+    margin-bottom:5px;
 }
 
-/* ==========================
-   TOPO
-========================== */
+.sidebar nav{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-top:30px;
+}
 
-.topo{
-    background:#fff;
-    margin:15px;
+.sidebar a{
+    color:white;
+    text-decoration:none;
+    padding:12px;
+    border-radius:10px;
+}
+
+.sidebar a:hover{
+    background:rgba(255,255,255,.15);
+}
+
+.main{
+    flex:1;
     padding:20px;
-    border-radius:16px;
-    border-top:6px solid var(--laranja);
-    box-shadow:0 4px 18px rgba(0,0,0,.08);
+}
 
+.header{
+    background:white;
+    border-radius:15px;
+    padding:20px;
     display:flex;
     justify-content:space-between;
-    gap:30px;
-}
-
-/* ==========================
-   LOGO
-========================== */
-
-.logo-area{
-    min-width:350px;
-}
-
-.logo-area img{
-    width:120px;
-    margin-bottom:15px;
-}
-
-.logo-area h2{
-    color:var(--azulEscuro);
-    font-size:24px;
-    font-weight:800;
-}
-
-.logo-area p{
-    margin-top:8px;
-    color:#666;
-}
-
-/* ==========================
-   FILTROS
-========================== */
-
-.filtros{
-    width:350px;
-}
-
-.linha-filtro{
-    display:flex;
     align-items:center;
-    margin-bottom:12px;
+    box-shadow:0 3px 15px rgba(0,0,0,.08);
 }
 
-.linha-filtro label{
-    width:80px;
-    font-weight:700;
-}
-
-.linha-filtro select{
-    flex:1;
-    padding:10px;
-    border-radius:8px;
-    border:1px solid #d0d7de;
-    background:#fff;
-}
-
-/* ==========================
-   USUÁRIO
-========================== */
-
-.usuario{
-    min-width:320px;
-    text-align:right;
-}
-
-.usuario-info{
-    margin-bottom:8px;
-    font-size:15px;
-    color:#444;
-}
-
-.usuario-info strong{
-    color:#222;
-}
-
-.acoes{
-    margin-top:15px;
+.header-right{
     display:flex;
     gap:10px;
-    justify-content:flex-end;
-    flex-wrap:wrap;
+    align-items:center;
 }
 
-.btn-topo{
-    border:none;
-    cursor:pointer;
-    padding:10px 14px;
-    border-radius:10px;
-    background:var(--azul);
-    color:white;
-    font-weight:600;
-}
-
-.btn-topo:hover{
-    background:var(--azulEscuro);
-}
-
-.btn-sair{
-    background:#dc3545;
-}
-
-.btn-sair:hover{
-    background:#c82333;
-}
-
-/* ==========================
-   DASHBOARD
-========================== */
-
-.conteudo{
-    padding:0 15px 15px;
+.header-right select,
+.header-right input{
+    padding:10px;
+    border:1px solid #ddd;
+    border-radius:8px;
 }
 
 .cards{
+    margin-top:20px;
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    grid-template-columns:repeat(4,1fr);
     gap:15px;
 }
 
 .card{
     background:white;
     border-radius:15px;
+    padding:25px;
+}
+
+.card h1{
+    font-size:42px;
+    margin-top:10px;
+}
+
+.alerta{
+    border-left:6px solid red;
+}
+
+.graficos{
+    margin-top:20px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.grafico-card{
+    background:white;
     padding:20px;
-    box-shadow:0 3px 15px rgba(0,0,0,.08);
+    border-radius:15px;
 }
 
-.card .icone{
-    width:55px;
-    height:55px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    border-radius:50%;
-    color:white;
-    font-size:24px;
-    margin-bottom:12px;
+.grade-inferior{
+    margin-top:20px;
+    display:grid;
+    grid-template-columns:1fr 350px;
+    gap:20px;
 }
 
-.azul .icone{
-    background:#0097CE;
+.box{
+    background:white;
+    border-radius:15px;
+    padding:20px;
 }
 
-.laranja .icone{
-    background:#F36F21;
-}
-
-.verde .icone{
-    background:#28a745;
-}
-
-.vermelho .icone{
-    background:#dc3545;
-}
-
-.card h3{
-    font-size:15px;
-    color:#666;
-}
-
-.card h2{
-    margin-top:8px;
-    font-size:32px;
-    color:#222;
-}
-
-@media(max-width:1100px){
-
-    .topo{
-        flex-direction:column;
-    }
-
-    .usuario{
-        text-align:left;
-    }
-
-    .acoes{
-        justify-content:flex-start;
-    }
-
-}
-
+.acoes-rapidas{
+    margin-top:20px;
+   
 </style>
 </head>
 
 <body>
 
-<div class="topo">
+<div class="layout">
 
-    <!-- LOGO -->
+    <!-- MENU -->
 
-    <div class="logo-area">
+    <aside class="sidebar">
 
-        logo_energisa.png
+        <div class="sidebar-logo">
 
-        <h2>
-            Sistema de Controle de EPI,
-            EPC e Ferramental
-        </h2>
+            <h2>ENERGISA</h2>
 
-        <p>
-            Gestão completa de equipamentos,
-            inventários e movimentações.
-        </p>
-
-    </div>
-
-    <!-- FILTROS -->
-
-    <div class="filtros">
-
-        <div class="linha-filtro">
-            <label>Regional</label>
-
-            <select id="regional">
-                <option>DEOP-L</option>
-            </select>
-        </div>
-
-        <div class="linha-filtro">
-            <label>Polo</label>
-
-            <select id="polo">
-                <option>Cajazeiras</option>
-            </select>
-        </div>
-
-        <div class="linha-filtro">
-            <label>Base</label>
-
-            <select id="base">
-                <option>Base Cajazeiras I</option>
-            </select>
-        </div>
-
-    </div>
-
-    <!-- USUARIO -->
-
-    <div class="usuario">
-
-        <div class="usuario-info">
-            👋 Olá,
-            <strong id="nomeUsuario">
-                Pedro Fillype
-            </strong>
-        </div>
-
-        <div class="usuario-info">
-            📍
-            <span id="regionalUsuario">
-                DEOP-L
+            <span>
+                Controle de EPI
             </span>
-        </div>
-
-        <div class="usuario-info">
-            🏢
-            <span id="poloUsuario">
-                Cajazeiras
-            </span>
-        </div>
-
-        <div class="usuario-info">
-            🏠
-            <span id="baseUsuario">
-                Base Cajazeiras I
-            </span>
-        </div>
-
-        <div class="usuario-info">
-            📅
-            <span id="dataAtual"></span>
-
-            &nbsp;&nbsp;
-
-            🕒
-            <span id="horaAtual"></span>
-        </div>
-
-        <div class="acoes">
-
-            <button class="btn-topo">
-                <i class="bi bi-bell"></i>
-                Notificações
-            </button>
-
-            <button class="btn-topo">
-                <i class="bi bi-person"></i>
-                Perfil
-            </button>
-
-            <button
-                class="btn-topo btn-sair"
-                onclick="logout()">
-
-                <i class="bi bi-box-arrow-right"></i>
-                Sair
-
-            </button>
 
         </div>
 
-    </div>
+        <nav>
 
-</div>
+            #
+                <i class="bi bi-house"></i>
+                Dashboard
+            </a>
 
-<!-- DASHBOARD -->
-
-<div class="conteudo">
-
-    <div class="cards">
-
-        <div class="card azul">
-            <div class="icone">
-                <i class="bi bi-shield-check"></i>
-            </div>
-
-            <h3>Equipamentos</h3>
-            <h2 id="totalEquipamentos">0</h2>
-        </div>
-
-        <div class="card laranja">
-            <div class="icone">
-                <i class="bi bi-clipboard-check"></i>
-            </div>
-
-            <h3>LAP</h3>
-            <h2 id="totalLap">0</h2>
-        </div>
-
-        <div class="card verde">
-            <div class="icone">
+            #
                 <i class="bi bi-box-seam"></i>
+                Equipamentos
+            </a>
+
+            #
+                <i class="bi bi-shield-check"></i>
+                LAP
+            </a>
+
+            #
+                <i class="bi bi-clipboard-data"></i>
+                Inventários
+            </a>
+
+            #
+                <i class="bi bi-arrow-left-right"></i>
+                Movimentações
+            </a>
+
+            #
+                <i class="bi bi-people"></i>
+                Colaboradores
+            </a>
+
+            #
+                <i class="bi bi-graph-up"></i>
+                Relatórios
+            </a>
+
+            #
+                <i class="bi bi-gear"></i>
+                Configurações
+            </a>
+
+        </nav>
+
+    </aside>
+
+    <!-- AREA PRINCIPAL -->
+
+    <main class="main">
+
+        <!-- TOPO -->
+
+        <header class="header">
+
+            <div>
+
+                <h1>
+                    Controle de EPI / EPC / Ferramental
+                </h1>
+
             </div>
 
-            <h3>Inventários</h3>
-            <h2 id="totalInventarios">0</h2>
-        </div>
+            <div class="header-right">
 
-        <div class="card vermelho">
-            <div class="icone">
-                <i class="bi bi-exclamation-triangle"></i>
+                <select id="regional"></select>
+
+                <select id="polo"></select>
+
+                <select id="base"></select>
+
+                <input
+                    type="text"
+                    placeholder="Pesquisar..."
+                >
+
+                <i class="bi bi-bell"></i>
+
+                <div class="usuario-topo">
+
+                    <strong id="nomeUsuario">
+                        Pedro
+                    </strong>
+
+                    <small id="perfilUsuario">
+                        Administrador
+                    </small>
+
+                </div>
+
+                <button
+                    onclick="logout()"
+                    class="btnLogout">
+
+                    <i class="bi bi-box-arrow-right"></i>
+
+                </button>
+
             </div>
 
-            <h3>Divergências</h3>
-            <h2 id="totalDivergencias">0</h2>
-        </div>
+        </header>
 
-    </div>
+        <!-- CARDS -->
+
+        <section class="cards">
+
+            <div class="card">
+
+                <h3>
+                    🛡 Equipamentos
+                </h3>
+
+                <h1 id="totalEquipamentos">
+                    0
+                </h1>
+
+                <span>
+                    +15 este mês
+                </span>
+
+            </div>
+
+            <div class="card">
+
+                <h3>
+                    📋 Inventários
+                </h3>
+
+                <h1 id="totalInventarios">
+                    0
+                </h1>
+
+                <span>
+                    2 pendentes
+                </span>
+
+            </div>
+
+            <div class="card">
+
+                <h3>
+                    🦺 LAP
+                </h3>
+
+                <h1 id="totalLap">
+                    0
+                </h1>
+
+                <span>
+                    4 vencendo
+                </span>
+
+            </div>
+
+            <div class="card alerta">
+
+                <h3>
+                    ⚠ Divergências
+                </h3>
+
+                <h1 id="totalDivergencias">
+                    0
+                </h1>
+
+                <span>
+                    Necessitam atenção
+                </span>
+
+            </div>
+
+        </section>
+
+        <!-- GRAFICOS -->
+
+        <section class="graficos">
+
+            <div class="grafico-card">
+
+                <h3>
+                    Equipamentos por Categoria
+                </h3>
+
+                <canvas
+                    id="graficoCategoria">
+                </canvas>
+
+            </div>
+
+            <div class="grafico-card">
+
+                <h3>
+                    Inventários por Polo
+                </h3>
+
+                <canvas
+                    id="graficoPolo">
+                </canvas>
+
+            </div>
+
+        </section>
+
+        <!-- TABELAS -->
+
+        <section class="grade-inferior">
+
+            <div class="box">
+
+                <h3>
+                    Últimas Movimentações
+                </h3>
+
+                <div id="ultimasMovimentacoes">
+
+                </div>
+
+            </div>
+
+            <div class="box">
+
+                <h3>
+                    Equipamentos Vencendo
+                </h3>
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Equipamento</th>
+                            <th>Dias</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody
+                        id="vencimentos">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+        <!-- AÇÕES -->
+
+        <section class="acoes-rapidas">
+
+            <button>
+                ➕ Novo Equipamento
+            </button>
+
+            <button>
+                📋 Novo Inventário
+            </button>
+
+            <button>
+                🦺 Nova LAP
+            </button>
+
+            <button>
+                🔄 Movimentação
+            </button>
+
+        </section>
+
+    </main>
 
 </div>
+
+
 
 <script src="https://coec-epb.github.io/Controle-de-EPI-EPC-e-Ferramental---DEOP/auth.js"></script>
 
