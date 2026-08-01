@@ -1,230 +1,572 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Controle de EPI</title>
+<title>Controle de EPI / EPC / Ferramental</title>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<link
+rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
 <style>
 
-.layout{
-    display:flex;
-    min-height:100vh;
+:root{
+
+    --azul:#0097CE;
+    --azulEscuro:#0077B6;
+    --laranja:#F36F21;
+    --cinza:#F5F7FA;
+    --branco:#FFFFFF;
+
 }
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+
+    background:var(--cinza);
+
+}
+
+/* ===================================
+MENU
+=================================== */
 
 .sidebar{
+
+    position:fixed;
+
+    left:0;
+    top:0;
+    bottom:0;
+
     width:260px;
-    background:#0097CE;
+
+    background:
+    linear-gradient(
+        180deg,
+        #0097CE,
+        #0077B6
+    );
+
     color:white;
+
     padding:25px;
+
+    box-shadow:
+    4px 0 20px rgba(0,0,0,.15);
+
 }
 
-.sidebar h2{
-    margin-bottom:5px;
+.logo{
+
+    text-align:center;
+
+    margin-bottom:30px;
+
 }
 
-.sidebar nav{
+.logo h1{
+
+    font-size:34px;
+
+    font-weight:900;
+
+}
+
+.logo span{
+
+    font-size:14px;
+
+    opacity:.9;
+
+}
+
+.menu{
+
     display:flex;
+
     flex-direction:column;
+
     gap:8px;
-    margin-top:30px;
+
 }
 
-.sidebar a{
+.menu a{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
     color:white;
+
     text-decoration:none;
-    padding:12px;
-    border-radius:10px;
+
+    padding:14px;
+
+    border-radius:12px;
+
+    transition:.2s;
+
+    font-weight:600;
+
 }
 
-.sidebar a:hover{
-    background:rgba(255,255,255,.15);
+.menu a:hover{
+
+    background:
+    rgba(255,255,255,.15);
+
 }
+
+.menu .ativo{
+
+    background:white;
+
+    color:#0097CE;
+
+}
+
+/* ===================================
+CONTEÚDO
+=================================== */
 
 .main{
-    flex:1;
-    padding:20px;
+
+    margin-left:260px;
+
+    padding:25px;
+
 }
 
+/* ===================================
+HEADER
+=================================== */
+
 .header{
+
     background:white;
-    border-radius:15px;
-    padding:20px;
+
+    border-radius:22px;
+
+    padding:25px;
+
+    box-shadow:
+    0 8px 25px rgba(0,0,0,.08);
+
     display:flex;
-    justify-content:space-between;
+
+    justify-content:
+    space-between;
+
     align-items:center;
-    box-shadow:0 3px 15px rgba(0,0,0,.08);
+
+}
+
+.header-left h1{
+
+    font-size:34px;
+
+    color:#222;
+
+}
+
+.header-left small{
+
+    color:#777;
+
 }
 
 .header-right{
+
     display:flex;
-    gap:10px;
+
     align-items:center;
+
+    gap:10px;
+
 }
 
-.header-right select,
-.header-right input{
-    padding:10px;
+.header-right select{
+
+    height:42px;
+
     border:1px solid #ddd;
-    border-radius:8px;
+
+    border-radius:10px;
+
+    padding:0 10px;
+
 }
+
+.header-right input{
+
+    width:240px;
+
+    height:42px;
+
+    border:1px solid #ddd;
+
+    border-radius:10px;
+
+    padding:0 12px;
+
+}
+
+.usuario{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+}
+
+.usuario-info{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.btn-sair{
+
+    border:none;
+
+    background:none;
+
+    cursor:pointer;
+
+    font-size:22px;
+
+}
+
+/* ===================================
+AÇÕES RÁPIDAS
+=================================== */
+
+.acoes-rapidas{
+
+    display:flex;
+
+    gap:15px;
+
+    margin:20px 0;
+
+}
+
+.acoes-rapidas button{
+
+    border:none;
+
+    background:#0097CE;
+
+    color:white;
+
+    padding:14px 22px;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    font-weight:700;
+
+    box-shadow:
+    0 6px 15px rgba(0,151,206,.25);
+
+}
+
+/* ===================================
+CARDS
+=================================== */
 
 .cards{
-    margin-top:20px;
+
     display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:15px;
+
+    grid-template-columns:
+    repeat(4,1fr);
+
+    gap:20px;
+
 }
 
 .card{
+
+    position:relative;
+
     background:white;
-    border-radius:15px;
+
     padding:25px;
+
+    border-radius:18px;
+
+    box-shadow:
+    0 8px 20px rgba(0,0,0,.08);
+
 }
 
-.card h1{
-    font-size:42px;
-    margin-top:10px;
+.card::before{
+
+    content:"";
+
+    position:absolute;
+
+    left:0;
+    top:0;
+    bottom:0;
+
+    width:6px;
+
+    border-radius:
+    18px 0 0 18px;
+
 }
 
-.alerta{
-    border-left:6px solid red;
+.card.equipamentos::before{
+    background:#0097CE;
 }
+
+.card.inventarios::before{
+    background:#F36F21;
+}
+
+.card.lap::before{
+    background:#28A745;
+}
+
+.card.divergencias::before{
+    background:#DC3545;
+}
+
+.card h2{
+
+    font-size:46px;
+
+    margin:8px 0;
+
+}
+
+.card small{
+
+    color:#777;
+
+}
+
+/* ===================================
+GRAFICOS
+=================================== */
 
 .graficos{
-    margin-top:20px;
+
+    margin-top:25px;
+
     display:grid;
-    grid-template-columns:1fr 1fr;
+
+    grid-template-columns:
+    1fr 1fr;
+
     gap:20px;
+
 }
 
-.grafico-card{
+.grafico{
+
     background:white;
+
+    min-height:350px;
+
+    border-radius:20px;
+
     padding:20px;
-    border-radius:15px;
+
+    box-shadow:
+    0 8px 20px rgba(0,0,0,.08);
+
 }
 
-.grade-inferior{
-    margin-top:20px;
+/* ===================================
+RODAPÉ DASHBOARD
+=================================== */
+
+.inferior{
+
+    margin-top:25px;
+
     display:grid;
-    grid-template-columns:1fr 350px;
+
+    grid-template-columns:
+    1fr 350px;
+
     gap:20px;
+
 }
 
 .box{
+
     background:white;
-    border-radius:15px;
+
+    border-radius:20px;
+
     padding:20px;
+
+    box-shadow:
+    0 8px 20px rgba(0,0,0,.08);
+
 }
 
-.acoes-rapidas{
-    margin-top:20px;
-   
+.timeline-item{
+
+    display:flex;
+
+    gap:15px;
+
+    border-bottom:
+    1px solid #EEE;
+
+    padding:12px 0;
+
+}
+
+.hora{
+
+    width:70px;
+
+    color:#777;
+
+}
+
+.badge{
+
+    display:inline-block;
+
+    background:#DC3545;
+
+    color:white;
+
+    padding:5px 10px;
+
+    border-radius:20px;
+
+    font-size:12px;
+
+}
+
 </style>
+
 </head>
 
 <body>
 
-<div class="layout">
+<div class="sidebar">
 
-    <!-- MENU -->
+    <div class="logo">
 
-    <aside class="sidebar">
+        <h1>ENERGISA</h1>
 
-        <div class="sidebar-logo">
+        <span>
+            Controle de EPI
+        </span>
 
-            <h2>ENERGISA</h2>
+    </div>
 
-            <span>
-                Controle de EPI
-            </span>
+    <nav class="menu">
+
+        <a class="ativo">
+            <i class="bi bi-grid"></i>
+            Dashboard
+        </a>
+
+        <a>
+            <i class="bi bi-box-seam"></i>
+            Equipamentos
+        </a>
+
+        <a>
+            <i class="bi bi-shield-check"></i>
+            LAP
+        </a>
+
+        <a>
+            <i class="bi bi-clipboard-data"></i>
+            Inventários
+        </a>
+
+        <a>
+            <i class="bi bi-arrow-left-right"></i>
+            Movimentações
+        </a>
+
+        <a>
+            <i class="bi bi-people"></i>
+            Colaboradores
+        </a>
+
+        <a>
+            <i class="bi bi-bar-chart"></i>
+            Relatórios
+        </a>
+
+        <a>
+            <i class="bi bi-gear"></i>
+            Configurações
+        </a>
+
+    </nav>
+
+</div>
+
+<div class="main">
+
+    <div class="header">
+
+        <div class="header-left">
+
+            <h1>
+                Controle de EPI / EPC / Ferramental
+            </h1>
+
+            <small>
+                Gestão de materiais e inventários
+            </small>
 
         </div>
 
-        <nav>
+        <div class="header-right">
 
-            #
-                <i class="bi bi-house"></i>
-                Dashboard
-            </a>
+            <select id="regional"></select>
 
-            #
-                <i class="bi bi-box-seam"></i>
-                Equipamentos
-            </a>
+            <select id="polo"></select>
 
-            #
-                <i class="bi bi-shield-check"></i>
-                LAP
-            </a>
+            <select id="base"></select>
 
-            #
-                <i class="bi bi-clipboard-data"></i>
-                Inventários
-            </a>
+            <input
+            type="text"
+            placeholder="Pesquisar...">
 
-            #
-                <i class="bi bi-arrow-left-right"></i>
-                Movimentações
-            </a>
+            <i class="bi bi-bell"></i>
 
-            #
-                <i class="bi bi-people"></i>
-                Colaboradores
-            </a>
+            <div class="usuario">
 
-            #
-                <i class="bi bi-graph-up"></i>
-                Relatórios
-            </a>
+                <i class="bi bi-person-circle"></i>
 
-            #
-                <i class="bi bi-gear"></i>
-                Configurações
-            </a>
-
-        </nav>
-
-    </aside>
-
-    <!-- AREA PRINCIPAL -->
-
-    <main class="main">
-
-        <!-- TOPO -->
-
-        <header class="header">
-
-            <div>
-
-                <h1>
-                    Controle de EPI / EPC / Ferramental
-                </h1>
-
-            </div>
-
-            <div class="header-right">
-
-                <select id="regional"></select>
-
-                <select id="polo"></select>
-
-                <select id="base"></select>
-
-                <input
-                    type="text"
-                    placeholder="Pesquisar..."
-                >
-
-                <i class="bi bi-bell"></i>
-
-                <div class="usuario-topo">
+                <div class="usuario-info">
 
                     <strong id="nomeUsuario">
-                        Pedro
+                        Pedro Fillype
                     </strong>
 
                     <small id="perfilUsuario">
@@ -233,289 +575,1194 @@
 
                 </div>
 
-                <button
-                    onclick="logout()"
-                    class="btnLogout">
-
-                    <i class="bi bi-box-arrow-right"></i>
-
-                </button>
-
             </div>
 
-        </header>
+            <button
+            class="btn-sair"
+            onclick="logout()">
 
-        <!-- CARDS -->
+                <i
+                class="bi bi-box-arrow-right">
+                </i>
 
-        <section class="cards">
-
-            <div class="card">
-
-                <h3>
-                    🛡 Equipamentos
-                </h3>
-
-                <h1 id="totalEquipamentos">
-                    0
-                </h1>
-
-                <span>
-                    +15 este mês
-                </span>
-
-            </div>
-
-            <div class="card">
-
-                <h3>
-                    📋 Inventários
-                </h3>
-
-                <h1 id="totalInventarios">
-                    0
-                </h1>
-
-                <span>
-                    2 pendentes
-                </span>
-
-            </div>
-
-            <div class="card">
-
-                <h3>
-                    🦺 LAP
-                </h3>
-
-                <h1 id="totalLap">
-                    0
-                </h1>
-
-                <span>
-                    4 vencendo
-                </span>
-
-            </div>
-
-            <div class="card alerta">
-
-                <h3>
-                    ⚠ Divergências
-                </h3>
-
-                <h1 id="totalDivergencias">
-                    0
-                </h1>
-
-                <span>
-                    Necessitam atenção
-                </span>
-
-            </div>
-
-        </section>
-
-        <!-- GRAFICOS -->
-
-        <section class="graficos">
-
-            <div class="grafico-card">
-
-                <h3>
-                    Equipamentos por Categoria
-                </h3>
-
-                <canvas
-                    id="graficoCategoria">
-                </canvas>
-
-            </div>
-
-            <div class="grafico-card">
-
-                <h3>
-                    Inventários por Polo
-                </h3>
-
-                <canvas
-                    id="graficoPolo">
-                </canvas>
-
-            </div>
-
-        </section>
-
-        <!-- TABELAS -->
-
-        <section class="grade-inferior">
-
-            <div class="box">
-
-                <h3>
-                    Últimas Movimentações
-                </h3>
-
-                <div id="ultimasMovimentacoes">
-
-                </div>
-
-            </div>
-
-            <div class="box">
-
-                <h3>
-                    Equipamentos Vencendo
-                </h3>
-
-                <table>
-
-                    <thead>
-
-                        <tr>
-                            <th>Equipamento</th>
-                            <th>Dias</th>
-                        </tr>
-
-                    </thead>
-
-                    <tbody
-                        id="vencimentos">
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </section>
-
-        <!-- AÇÕES -->
-
-        <section class="acoes-rapidas">
-
-            <button>
-                ➕ Novo Equipamento
             </button>
 
-            <button>
-                📋 Novo Inventário
-            </button>
+        </div>
 
-            <button>
-                🦺 Nova LAP
-            </button>
+    </div>
 
-            <button>
-                🔄 Movimentação
-            </button>
+    <div class="acoes-rapidas">
 
-        </section>
+        <button>
+            ➕ Novo Equipamento
+        </button>
 
-    </main>
+        <button>
+            📋 Novo Inventário
+        </button>
+
+        <button>
+            🦺 Nova LAP
+        </button>
+
+        <button>
+            🔄 Movimentação
+        </button>
+
+    </div>
+
+    <section class="cards">
+
+        <div class="card equipamentos">
+
+            <h3>🛡 Equipamentos</h3>
+
+            <h2 id="totalEquipamentos">
+                0
+            </h2>
+
+            <small>
+                +15 este mês
+            </small>
+
+        </div>
+
+        <div class="card inventarios">
+
+            <h3>📋 Inventários</h3>
+
+            <h2 id="totalInventarios">
+                0
+            </h2>
+
+            <small>
+                2 pendentes
+            </small>
+
+        </div>
+
+        <div class="card lap">
+
+            <h3>🦺 LAP</h3>
+
+            <h2 id="totalLap">
+                0
+            </h2>
+
+            <small>
+                4 vencendo
+            </small>
+
+        </div>
+
+        <div class="card divergencias">
+
+            <h3>⚠ Divergências</h3>
+
+            <h2 id="totalDivergencias">
+                0
+            </h2>
+
+            <small>
+                Necessitam atenção
+            </small>
+
+        </div>
+
+    </section>
+
+    <section class="graficos">
+
+        <div class="grafico">
+
+            <h3>
+                Equipamentos por Categoria
+            </h3>
+
+            <canvas id="graficoCategoria"></canvas>
+
+        </div>
+
+        <div class="grafico">
+
+            <h3>
+                Inventários por Polo
+            </h3>
+
+            <canvas id="graficoPolo"></canvas>
+
+        </div>
+
+    </section>
+
+    <section class="inferior">
+
+        <div class="box">
+
+            <h3>
+                Últimas Movimentações
+            </h3>
+
+            <div id="ultimasMovimentacoes">
+            </div>
+
+        </div>
+
+        <div class="box">
+
+            <h3>
+                Equipamentos Vencendo
+            </h3>
+
+            <table width="100%">
+
+                <tbody id="vencimentos">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
 
 </div>
 
+<script src="https://coec-epb.github.io/Controle-de-EPI-EPC-e-Ferramental---DEOP/auth.js"></script>
 
+https://cdn.jsdelivr.net/npm/chart.jsscript>
 
 <script src="https://coec-epb.github.io/Controle-de-EPI-EPC-e-Ferramental---DEOP/auth.js"></script>
 
 <script>
 
-function atualizarRelogio(){
+/* ======================================================
+   HELPERS GERAIS
+====================================================== */
 
-    const agora = new Date();
+function el(id){
+    return document.getElementById(id);
+}
 
-    document.getElementById("dataAtual")
-    .innerHTML =
-    agora.toLocaleDateString("pt-BR");
+function texto(id, valor){
+    const elemento = el(id);
 
-    document.getElementById("horaAtual")
-    .innerHTML =
-    agora.toLocaleTimeString("pt-BR");
+    if(elemento){
+        elemento.innerText = valor ?? "";
+    }
+}
+
+function html(id, valor){
+    const elemento = el(id);
+
+    if(elemento){
+        elemento.innerHTML = valor ?? "";
+    }
+}
+
+function formatarNumero(valor){
+
+    const numero =
+    Number(valor || 0);
+
+    return numero.toLocaleString(
+        "pt-BR"
+    );
 
 }
 
-setInterval(
-    atualizarRelogio,
-    1000
-);
+function limparTexto(valor){
 
-atualizarRelogio();
-
-const usuario = getUser();
-
-if(usuario){
-
-    document.getElementById("nomeUsuario")
-    .innerHTML =
-    usuario.nome || "";
-
-    document.getElementById("regionalUsuario")
-    .innerHTML =
-    usuario.regional || "";
-
-    document.getElementById("poloUsuario")
-    .innerHTML =
-    usuario.polo || "";
+    return String(
+        valor || ""
+    ).trim();
 
 }
+
+/* ======================================================
+   USUÁRIO LOGADO
+====================================================== */
+
+async function carregarUsuario(){
+
+    let usuario = null;
+
+    try{
+
+        if(
+            typeof getUser === "function"
+        ){
+            usuario = getUser();
+        }
+
+    }catch(e){
+        usuario = null;
+    }
+
+    /*
+      Compatibilidade:
+      Alguns logins salvam:
+      - user
+      - usuario
+      - dados.usuario
+    */
+
+    if(
+        usuario &&
+        usuario.usuario
+    ){
+        usuario = usuario.usuario;
+    }
+
+    if(
+        usuario &&
+        usuario.user
+    ){
+        usuario = usuario.user;
+    }
+
+    /*
+      Se não tiver dados completos no localStorage,
+      tenta buscar no endpoint /me.
+    */
+
+    try{
+
+        if(
+            (!usuario || !usuario.nome) &&
+            typeof authFetch === "function" &&
+            typeof API !== "undefined"
+        ){
+
+            const resp =
+            await authFetch(
+                `${API}/me`
+            );
+
+            if(resp.ok){
+
+                const dados =
+                await resp.json();
+
+                if(
+                    dados.usuario
+                ){
+                    usuario = dados.usuario;
+
+                    localStorage.setItem(
+                        "user",
+                        JSON.stringify(usuario)
+                    );
+                }
+
+                if(
+                    dados.user
+                ){
+                    usuario = dados.user;
+
+                    localStorage.setItem(
+                        "user",
+                        JSON.stringify(usuario)
+                    );
+                }
+
+            }
+
+        }
+
+    }catch(e){
+        console.warn(
+            "Não foi possível buscar /me:",
+            e
+        );
+    }
+
+    if(!usuario){
+        usuario = {};
+    }
+
+    const nome =
+    usuario.nome ||
+    usuario.lider ||
+    "Usuário";
+
+    const perfil =
+    usuario.perfil ||
+    (
+        usuario.isAdmin
+        ? "Administrador"
+        : "Usuário"
+    );
+
+    const regional =
+    usuario.regional ||
+    "";
+
+    const polo =
+    usuario.polo ||
+    "";
+
+    const base =
+    usuario.base ||
+    "";
+
+    texto(
+        "nomeUsuario",
+        nome
+    );
+
+    texto(
+        "perfilUsuario",
+        perfil === "admin"
+        ? "Administrador"
+        : perfil
+    );
+
+    preencherSelectUnico(
+        "regional",
+        regional || "Regional"
+    );
+
+    preencherSelectUnico(
+        "polo",
+        polo || "Polo"
+    );
+
+    preencherSelectUnico(
+        "base",
+        base || "Base"
+    );
+
+}
+
+/* ======================================================
+   SELECTS
+====================================================== */
+
+function preencherSelectUnico(
+    id,
+    valor
+){
+
+    const select =
+    el(id);
+
+    if(!select){
+        return;
+    }
+
+    select.innerHTML = "";
+
+    const option =
+    document.createElement("option");
+
+    option.value =
+    valor;
+
+    option.textContent =
+    valor;
+
+    select.appendChild(option);
+
+}
+
+function preencherSelectLista(
+    id,
+    lista,
+    placeholder
+){
+
+    const select =
+    el(id);
+
+    if(!select){
+        return;
+    }
+
+    const valorAtual =
+    select.value;
+
+    select.innerHTML = "";
+
+    const optPadrao =
+    document.createElement("option");
+
+    optPadrao.value = "";
+    optPadrao.textContent = placeholder;
+
+    select.appendChild(optPadrao);
+
+    lista.forEach(item => {
+
+        const valor =
+        limparTexto(item);
+
+        if(!valor){
+            return;
+        }
+
+        const option =
+        document.createElement("option");
+
+        option.value = valor;
+        option.textContent = valor;
+
+        select.appendChild(option);
+
+    });
+
+    if(valorAtual){
+        select.value = valorAtual;
+    }
+
+}
+
+/* ======================================================
+   DASHBOARD
+====================================================== */
 
 async function carregarDashboard(){
 
     try{
+
+        if(
+            typeof API === "undefined" ||
+            typeof authFetch !== "function"
+        ){
+            console.error(
+                "API ou authFetch não encontrado. Verifique o auth.js."
+            );
+            return;
+        }
 
         const resp =
         await authFetch(
             `${API}/dashboard`
         );
 
-        if (!resp.ok) {
+        const textoResposta =
+        await resp.text();
 
-    console.error(
-        "Erro API:",
-        await resp.text()
+        let dados = {};
+
+        try{
+
+            dados =
+            JSON.parse(textoResposta);
+
+        }catch(e){
+
+            console.error(
+                "Resposta do dashboard não é JSON:",
+                textoResposta
             );
-        
+
             return;
+
         }
-        
-        const dados =
-        await resp.json();
+
+        if(!resp.ok){
+
+            console.error(
+                "Erro API dashboard:",
+                dados
+            );
+
+            return;
+
+        }
 
         const d =
-        dados.dados || dados;
+        dados.dados ||
+        dados;
 
-        document.getElementById(
-            "totalEquipamentos"
-        ).innerText =
-        d.equipamentos || 0;
+        texto(
+            "totalEquipamentos",
+            formatarNumero(d.equipamentos)
+        );
 
-        document.getElementById(
-            "totalLap"
-        ).innerText =
-        d.lap || 0;
+        texto(
+            "totalInventarios",
+            formatarNumero(d.inventarios)
+        );
 
-        document.getElementById(
-            "totalInventarios"
-        ).innerText =
-        d.inventarios || 0;
+        texto(
+            "totalLap",
+            formatarNumero(d.lap)
+        );
 
-        document.getElementById(
-            "totalDivergencias"
-        ).innerText =
-        d.divergencias || 0;
+        texto(
+            "totalDivergencias",
+            formatarNumero(d.divergencias)
+        );
 
-    }
+    }catch(e){
 
-    catch(e){
-
-        console.error(e);
+        console.error(
+            "Erro ao carregar dashboard:",
+            e
+        );
 
     }
 
 }
 
-carregarDashboard();
+/* ======================================================
+   ESTATÍSTICAS E GRÁFICOS
+====================================================== */
+
+let chartCategoria = null;
+let chartPolo = null;
+
+async function carregarEstatisticas(){
+
+    try{
+
+        if(
+            typeof API === "undefined" ||
+            typeof authFetch !== "function"
+        ){
+            return;
+        }
+
+        const resp =
+        await authFetch(
+            `${API}/estatisticas`
+        );
+
+        const textoResposta =
+        await resp.text();
+
+        let dados = {};
+
+        try{
+
+            dados =
+            JSON.parse(textoResposta);
+
+        }catch(e){
+
+            console.warn(
+                "Resposta de estatísticas não é JSON:",
+                textoResposta
+            );
+
+            desenharGraficosVazios();
+
+            return;
+
+        }
+
+        if(!resp.ok){
+
+            console.warn(
+                "Erro ao buscar estatísticas:",
+                dados
+            );
+
+            desenharGraficosVazios();
+
+            return;
+
+        }
+
+        const d =
+        dados.dados ||
+        dados;
+
+        const categorias =
+        d.categorias ||
+        [];
+
+        const polos =
+        d.polos ||
+        d.regionais ||
+        [];
+
+        desenharGraficoCategoria(
+            categorias
+        );
+
+        desenharGraficoPolo(
+            polos
+        );
+
+        if(
+            d.regionais &&
+            d.regionais.length
+        ){
+            preencherSelectLista(
+                "regional",
+                d.regionais.map(r => r.regional || r.valor || r.nome),
+                "Regional"
+            );
+        }
+
+        if(
+            d.polos &&
+            d.polos.length
+        ){
+            preencherSelectLista(
+                "polo",
+                d.polos.map(r => r.polo || r.valor || r.nome),
+                "Polo"
+            );
+        }
+
+    }catch(e){
+
+        console.error(
+            "Erro ao carregar estatísticas:",
+            e
+        );
+
+        desenharGraficosVazios();
+
+    }
+
+}
+
+function desenharGraficoCategoria(lista){
+
+    const canvas =
+    el("graficoCategoria");
+
+    if(!canvas || typeof Chart === "undefined"){
+        return;
+    }
+
+    const labels =
+    lista.length
+    ? lista.map(item => item.categoria || item.valor || "Sem categoria")
+    : ["EPI", "EPC", "Ferramental"];
+
+    const valores =
+    lista.length
+    ? lista.map(item => Number(item.total || 0))
+    : [0, 0, 0];
+
+    if(chartCategoria){
+        chartCategoria.destroy();
+    }
+
+    chartCategoria =
+    new Chart(
+        canvas,
+        {
+            type:"doughnut",
+            data:{
+                labels,
+                datasets:[
+                    {
+                        data:valores,
+                        backgroundColor:[
+                            "#0097CE",
+                            "#F36F21",
+                            "#28A745",
+                            "#6F42C1",
+                            "#FFC107"
+                        ],
+                        borderWidth:0
+                    }
+                ]
+            },
+            options:{
+                responsive:true,
+                maintainAspectRatio:false,
+                plugins:{
+                    legend:{
+                        position:"bottom"
+                    }
+                },
+                cutout:"62%"
+            }
+        }
+    );
+
+}
+
+function desenharGraficoPolo(lista){
+
+    const canvas =
+    el("graficoPolo");
+
+    if(!canvas || typeof Chart === "undefined"){
+        return;
+    }
+
+    const labels =
+    lista.length
+    ? lista.map(item => item.polo || item.regional || item.valor || "Sem polo")
+    : ["Sem dados"];
+
+    const valores =
+    lista.length
+    ? lista.map(item => Number(item.total || 0))
+    : [0];
+
+    if(chartPolo){
+        chartPolo.destroy();
+    }
+
+    chartPolo =
+    new Chart(
+        canvas,
+        {
+            type:"bar",
+            data:{
+                labels,
+                datasets:[
+                    {
+                        label:"Inventários",
+                        data:valores,
+                        backgroundColor:"#0097CE",
+                        borderRadius:10
+                    }
+                ]
+            },
+            options:{
+                responsive:true,
+                maintainAspectRatio:false,
+                plugins:{
+                    legend:{
+                        display:false
+                    }
+                },
+                scales:{
+                    y:{
+                        beginAtZero:true,
+                        ticks:{
+                            precision:0
+                        }
+                    }
+                }
+            }
+        }
+    );
+
+}
+
+function desenharGraficosVazios(){
+
+    desenharGraficoCategoria([]);
+    desenharGraficoPolo([]);
+
+}
+
+/* ======================================================
+   MOVIMENTAÇÕES
+====================================================== */
+
+async function carregarMovimentacoes(){
+
+    const container =
+    el("ultimasMovimentacoes");
+
+    if(!container){
+        return;
+    }
+
+    /*
+      Se depois você criar uma rota no Worker:
+      GET /movimentacoes/recentes
+      essa função já tenta usar.
+    */
+
+    try{
+
+        if(
+            typeof API !== "undefined" &&
+            typeof authFetch === "function"
+        ){
+
+            const resp =
+            await authFetch(
+                `${API}/movimentacoes/recentes`
+            );
+
+            if(resp.ok){
+
+                const dados =
+                await resp.json();
+
+                const lista =
+                dados.dados ||
+                dados.movimentacoes ||
+                [];
+
+                if(lista.length){
+
+                    renderMovimentacoes(
+                        lista
+                    );
+
+                    return;
+
+                }
+
+            }
+
+        }
+
+    }catch(e){
+        console.warn(
+            "Movimentações ainda sem endpoint. Usando estado vazio."
+        );
+    }
+
+    container.innerHTML = `
+        <div class="timeline-item">
+            <div class="hora">
+                --
+            </div>
+
+            <div>
+                <strong>
+                    Nenhuma movimentação recente
+                </strong>
+
+                <p>
+                    As movimentações aparecerão aqui quando forem registradas.
+                </p>
+            </div>
+        </div>
+    `;
+
+}
+
+function renderMovimentacoes(lista){
+
+    const container =
+    el("ultimasMovimentacoes");
+
+    if(!container){
+        return;
+    }
+
+    container.innerHTML =
+    lista.slice(0, 6).map(item => {
+
+        const hora =
+        item.hora ||
+        item.data_hora ||
+        item.data ||
+        "--";
+
+        const usuario =
+        item.usuario ||
+        item.colaborador ||
+        item.nome ||
+        "Usuário";
+
+        const acao =
+        item.acao ||
+        item.tipo ||
+        "Movimentou";
+
+        const equipamento =
+        item.equipamento ||
+        item.material ||
+        item.descricao ||
+        "";
+
+        return `
+            <div class="timeline-item">
+
+                <div class="hora">
+                    ${hora}
+                </div>
+
+                <div>
+                    <strong>
+                        ${usuario}
+                    </strong>
+
+                    <p>
+                        ${acao} ${equipamento}
+                    </p>
+                </div>
+
+            </div>
+        `;
+
+    }).join("");
+
+}
+
+/* ======================================================
+   EQUIPAMENTOS VENCENDO
+====================================================== */
+
+async function carregarVencimentos(){
+
+    const tbody =
+    el("vencimentos");
+
+    if(!tbody){
+        return;
+    }
+
+    try{
+
+        if(
+            typeof API !== "undefined" &&
+            typeof authFetch === "function"
+        ){
+
+            const resp =
+            await authFetch(
+                `${API}/equipamentos/vencendo`
+            );
+
+            if(resp.ok){
+
+                const dados =
+                await resp.json();
+
+                const lista =
+                dados.dados ||
+                dados.vencimentos ||
+                [];
+
+                if(lista.length){
+
+                    renderVencimentos(
+                        lista
+                    );
+
+                    return;
+
+                }
+
+            }
+
+        }
+
+    }catch(e){
+        console.warn(
+            "Vencimentos ainda sem endpoint. Usando estado vazio."
+        );
+    }
+
+    tbody.innerHTML = `
+        <tr>
+            <td colspan="2">
+                Nenhum equipamento vencendo no momento.
+            </td>
+        </tr>
+    `;
+
+}
+
+function renderVencimentos(lista){
+
+    const tbody =
+    el("vencimentos");
+
+    if(!tbody){
+        return;
+    }
+
+    tbody.innerHTML =
+    lista.slice(0, 8).map(item => {
+
+        const nome =
+        item.nome ||
+        item.equipamento ||
+        item.material ||
+        "Equipamento";
+
+        const dias =
+        Number(
+            item.dias ||
+            item.dias_restantes ||
+            0
+        );
+
+        let classe =
+        "ok";
+
+        if(dias <= 10){
+            classe = "perigo";
+        }else if(dias <= 20){
+            classe = "alerta";
+        }
+
+        return `
+            <tr>
+                <td>
+                    ${nome}
+                </td>
+
+                <td>
+                    <span class="badge ${classe}">
+                        ${dias} dias
+                    </span>
+                </td>
+            </tr>
+        `;
+
+    }).join("");
+
+}
+
+/* ======================================================
+   PESQUISA
+====================================================== */
+
+function configurarPesquisa(){
+
+    const input =
+    document.querySelector(
+        ".header-right input"
+    );
+
+    if(!input){
+        return;
+    }
+
+    input.addEventListener(
+        "keydown",
+        function(event){
+
+            if(event.key !== "Enter"){
+                return;
+            }
+
+            const termo =
+            limparTexto(input.value);
+
+            if(!termo){
+                return;
+            }
+
+            /*
+              Se depois você tiver uma página de equipamentos,
+              esse redirecionamento já funciona.
+            */
+
+            window.location.href =
+            `equipamentos.html?q=${encodeURIComponent(termo)}`;
+
+        }
+    );
+
+}
+
+/* ======================================================
+   EVENTOS DOS BOTÕES RÁPIDOS
+====================================================== */
+
+function configurarBotoesRapidos(){
+
+    const botoes =
+    document.querySelectorAll(
+        ".acoes-rapidas button"
+    );
+
+    if(!botoes.length){
+        return;
+    }
+
+    if(botoes[0]){
+        botoes[0].onclick = function(){
+            window.location.href =
+            "equipamentos.html";
+        };
+    }
+
+    if(botoes[1]){
+        botoes[1].onclick = function(){
+            window.location.href =
+            "inventarios.html";
+        };
+    }
+
+    if(botoes[2]){
+        botoes[2].onclick = function(){
+            window.location.href =
+            "lap.html";
+        };
+    }
+
+    if(botoes[3]){
+        botoes[3].onclick = function(){
+            window.location.href =
+            "movimentacoes.html";
+        };
+    }
+
+}
+
+/* ======================================================
+   AJUSTES VISUAIS DINÂMICOS
+====================================================== */
+
+function aplicarEstiloTabela(){
+
+    const tabela =
+    document.querySelector(
+        ".box table"
+    );
+
+    if(!tabela){
+        return;
+    }
+
+    tabela.style.borderCollapse = "collapse";
+    tabela.style.marginTop = "12px";
+
+    const observer =
+    new MutationObserver(() => {
+
+        tabela
+        .querySelectorAll("td")
+        .forEach(td => {
+
+            td.style.padding = "10px 6px";
+            td.style.borderBottom = "1px solid #eee";
+            td.style.fontSize = "14px";
+
+        });
+
+    });
+
+    observer.observe(
+        tabela,
+        {
+            childList:true,
+            subtree:true
+        }
+    );
+
+}
+
+/* ======================================================
+   INICIALIZAÇÃO
+====================================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    async function(){
+
+        await carregarUsuario();
+
+        configurarPesquisa();
+
+        configurarBotoesRapidos();
+
+        aplicarEstiloTabela();
+
+        await carregarDashboard();
+
+        await carregarEstatisticas();
+
+        await carregarMovimentacoes();
+
+        await carregarVencimentos();
+
+    }
+);
 
 </script>
 
