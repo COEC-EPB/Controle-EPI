@@ -725,6 +725,142 @@ RODAPÉ DASHBOARD
         </div>
 
     </section>
+    <section
+id="entradaMaterial"
+style="
+display:none;
+margin-top:25px;
+">
+
+<div class="box">
+
+    <h3>
+        Entrada de Material
+    </h3>
+
+    <br>
+
+    <div style="
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+    ">
+
+        <div>
+
+            <label>Categoria</label>
+
+            <select id="categoriaEntrada">
+
+                <option>EPI</option>
+                <option>EPC</option>
+                <option>FERRAMENTAL</option>
+
+            </select>
+
+        </div>
+
+        <div>
+
+            <label>Material</label>
+
+            <input
+            id="materialEntrada"
+            placeholder="Ex.: Capacete Classe B">
+
+        </div>
+
+        <div>
+
+            <label>Código</label>
+
+            <input
+            id="codigoEntrada"
+            placeholder="Ex.: CAP001">
+
+        </div>
+
+        <div>
+
+            <label>Quantidade</label>
+
+            <input
+            type="number"
+            id="quantidadeEntrada"
+            value="1">
+
+        </div>
+
+        <div>
+
+            <label>Base</label>
+
+            <input
+            id="baseEntrada"
+            placeholder="Ex.: Sede">
+
+        </div>
+
+        <div>
+
+            <label>Recebido por</label>
+
+            <input
+            id="recebedorEntrada"
+            placeholder="Nome">
+
+        </div>
+
+        <div>
+
+            <label>Fornecedor</label>
+
+            <input
+            id="fornecedorEntrada"
+            placeholder="Fornecedor">
+
+        </div>
+
+        <div>
+
+            <label>Nota Fiscal</label>
+
+            <input
+            id="nfEntrada"
+            placeholder="Número NF">
+
+        </div>
+
+    </div>
+
+    <br>
+
+    <div>
+
+        <label>Observações</label>
+
+        <textarea
+        id="obsEntrada"
+        style="
+        width:100%;
+        min-height:100px;
+        "></textarea>
+
+    </div>
+
+    <br>
+
+    <button
+    onclick="salvarEntradaMaterial()">
+
+        Salvar Entrada
+
+    </button>
+
+</div>
+
+</section>
+    
 
 </div>
 
@@ -928,6 +1064,20 @@ async function carregarUsuario(){
         "base",
         base || "Base"
     );
+
+}
+    /*entrada de material*/
+    function abrirEntradaMaterial(){
+
+    const area =
+    document.getElementById(
+        "entradaMaterial"
+    );
+
+    area.style.display =
+    area.style.display === "none"
+    ? "block"
+    : "none";
 
 }
 
