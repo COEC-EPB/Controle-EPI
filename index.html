@@ -1811,10 +1811,8 @@ function configurarBotoesRapidos(){
     }
 
     if(botoes[0]){
-    botoes[0].onclick = function(){
-        abrirEntradaMaterial();
-    };
-}
+        botoes[0].onclick = abrirEntradaMaterial;
+    }
 
     if(botoes[1]){
         botoes[1].onclick = function(){
