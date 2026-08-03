@@ -593,9 +593,9 @@ RODAPÉ DASHBOARD
 
     <div class="acoes-rapidas">
 
-        <button>
-            ➕ Novo Equipamento
-        </button>
+        <button onclick="abrirEntradaMaterial()">
+    📦 Entrada de Material
+</button>
 
         <button>
             📋 Novo Inventário
@@ -1909,6 +1909,178 @@ document.addEventListener(
 
     }
 );
+
+    async function salvarEntradaMaterial(){
+
+    const dados = {
+
+        categoria:
+        document.getElementById(
+            "categoriaEntrada"
+        ).value,
+
+        material:
+        document.getElementById(
+            "materialEntrada"
+        ).value.trim(),
+
+        codigo:
+        document.getElementById(
+            "codigoEntrada"
+        ).value.trim(),
+
+        quantidade:
+        Number(
+            document.getElementById(
+                "quantidadeEntrada"
+            ).value
+        ),
+
+        base:
+        document.getElementById(
+            "baseEntrada"
+        ).value.trim(),
+
+        recebedor:
+        document.getElementById(
+            "recebedorEntrada"
+        ).value.trim(),
+
+        fornecedor:
+        document.getElementById(
+            "fornecedorEntrada"
+        ).value.trim(),
+
+        nota_fiscal:
+        document.getElementById(
+            "nfEntrada"
+        ).value.trim(),
+
+        observacao:
+        document.getElementById(
+            "obsEntrada"
+        ).value.trim(),
+
+        data_entrada:
+        new Date().toISOString()
+
+    };
+
+    if(!dados.material){
+
+        alert(
+            "Informe o material."
+        );
+
+        return;
+
+    }
+
+    if(dados.quantidade <= 0){
+
+        alert(
+            "Quantidade inválida."
+        );
+
+        return;
+
+    }
+
+    try{
+
+        const resp =
+        await authFetch(
+
+            `${API}/entrada-material`,
+
+            {
+
+                method:"POST",
+
+                headers:{
+                    "Content-Type":
+                    "application/json"
+                },
+
+                body:
+                JSON.stringify(dados)
+
+            }
+
+        );
+
+        const resultado =
+        await resp.json();
+
+        if(
+            !resp.ok ||
+            resultado.sucesso === false
+        ){
+
+            throw new Error(
+                resultado.mensagem ||
+                "Erro ao salvar."
+            );
+
+        }
+
+        alert(
+            "✅ Material adicionado ao estoque."
+        );
+
+        limparEntradaMaterial();
+
+        await carregarDashboard();
+
+    }
+
+    catch(e){
+
+        console.error(e);
+
+        alert(
+            "❌ " + e.message
+        );
+
+    }
+
+}
+
+function limparEntradaMaterial(){
+
+    document.getElementById(
+        "materialEntrada"
+    ).value = "";
+
+    document.getElementById(
+        "codigoEntrada"
+    ).value = "";
+
+    document.getElementById(
+        "quantidadeEntrada"
+    ).value = 1;
+
+    document.getElementById(
+        "baseEntrada"
+    ).value = "";
+
+    document.getElementById(
+        "recebedorEntrada"
+    ).value = "";
+
+    document.getElementById(
+        "fornecedorEntrada"
+    ).value = "";
+
+    document.getElementById(
+        "nfEntrada"
+    ).value = "";
+
+    document.getElementById(
+        "obsEntrada"
+    ).value = "";
+
+}
 
 </script>
 
