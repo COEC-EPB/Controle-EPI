@@ -877,11 +877,25 @@ id="modalEntradaMaterial">
             </div>
 
             <div>
-                <label>Base</label>
 
-                <input
-                id="baseEntrada">
-            </div>
+    <label>Polo</label>
+
+    <select id="poloEntrada"
+            onchange="atualizarBases()">
+
+    </select>
+
+</div>
+
+<div>
+
+    <label>Base</label>
+
+    <select id="baseEntrada">
+
+    </select>
+
+</div>
 
             <div>
                 <label>Recebido por</label>
@@ -942,6 +956,96 @@ id="modalEntradaMaterial">
 <script src="https://coec-epb.github.io/login-Material/auth.js"></script>
 
 <script>
+
+    const BASES_POR_POLO = {
+
+    "JOÃO PESSOA":[
+        "CABEDELO",
+        "SEDE",
+        "CRUZ DO PEIXE",
+        "PARATIBE",
+        "SANTA RITA",
+        "MANGABEIRA"
+    ],
+
+    "ITABAIANA":[
+        "ITABAIANA",
+        "INGÁ",
+        "GURINHÉM",
+        "AÇUDE/APORÁ"
+    ],
+
+    "MAMANGUAPE":[
+        "MAMANGUAPE",
+        "SAPÉ",
+        "BAÍA DA TRAIÇÃO",
+        "MATARACA"
+    ]
+
+};
+function carregarPolosEntrada(){
+
+    const select =
+    document.getElementById(
+        "poloEntrada"
+    );
+
+    select.innerHTML = `
+
+        <option value="">
+            Selecione
+        </option>
+
+        <option value="JOÃO PESSOA">
+            JOÃO PESSOA
+        </option>
+
+        <option value="ITABAIANA">
+            ITABAIANA
+        </option>
+
+        <option value="MAMANGUAPE">
+            MAMANGUAPE
+        </option>
+
+    `;
+
+}
+
+    function atualizarBases(){
+
+    const polo =
+    document.getElementById(
+        "poloEntrada"
+    ).value;
+
+    const selectBase =
+    document.getElementById(
+        "baseEntrada"
+    );
+
+    selectBase.innerHTML =
+    `<option value="">Selecione</option>`;
+
+    if(!BASES_POR_POLO[polo]){
+        return;
+    }
+
+    BASES_POR_POLO[polo]
+    .forEach(base => {
+
+        selectBase.innerHTML += `
+
+            <option value="${base}">
+                ${base}
+            </option>
+
+        `;
+
+    });
+
+}
+    
 
 /* ======================================================
    HELPERS GERAIS
@@ -1142,7 +1246,9 @@ async function carregarUsuario(){
 
 }
     /*entrada de material*/
-    function abrirEntradaMaterial(){
+function abrirEntradaMaterial(){
+
+    carregarPolosEntrada();
 
     document.getElementById(
         "modalEntradaMaterial"
@@ -2012,10 +2118,15 @@ document.addEventListener(
             ).value
         ),
 
+        polo:
+        document.getElementById(
+            "poloEntrada"
+        ).value,
+        
         base:
         document.getElementById(
             "baseEntrada"
-        ).value.trim(),
+        ).value,
 
         recebedor:
         document.getElementById(
