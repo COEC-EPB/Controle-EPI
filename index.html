@@ -2128,62 +2128,59 @@ console.log(
 
     const dados = {
 
-        categoria:
+    categoria:
+    document.getElementById(
+        "categoriaEntrada"
+    )?.value || "",
+
+    material:
+    document.getElementById(
+        "materialEntrada"
+    )?.value?.trim() || "",
+
+    codigo:
+    document.getElementById(
+        "codigoEntrada"
+    )?.value?.trim() || "",
+
+    quantidade:
+    Number(
         document.getElementById(
-            "categoriaEntrada"
-        ).value,
+            "quantidadeEntrada"
+        )?.value || 0
+    ),
 
-        material:
-        document.getElementById(
-            "materialEntrada"
-        ).value.trim(),
+    polo:
+    document.getElementById(
+        "poloEntrada"
+    )?.value || "",
 
-        codigo:
-        document.getElementById(
-            "codigoEntrada"
-        ).value.trim(),
+    base:
+    document.getElementById(
+        "baseEntrada"
+    )?.value || "",
 
-        quantidade:
-        Number(
-            document.getElementById(
-                "quantidadeEntrada"
-            ).value
-        ),
+    recebedor:
+    document.getElementById(
+        "recebedorEntrada"
+    )?.value?.trim() || "",
 
-        polo:
-        document.getElementById(
-            "poloEntrada"
-        ).value,
-        
-        base:
-        document.getElementById(
-            "baseEntrada"
-        ).value,
+    fornecedor:
+    document.getElementById(
+        "fornecedorEntrada"
+    )?.value?.trim() || "",
 
-        recebedor:
-        document.getElementById(
-            "recebedorEntrada"
-        ).value.trim(),
+    nota_fiscal:
+    document.getElementById(
+        "nfEntrada"
+    )?.value?.trim() || "",
 
-        fornecedor:
-        document.getElementById(
-            "fornecedorEntrada"
-        ).value.trim(),
+    observacao:
+    document.getElementById(
+        "obsEntrada"
+    )?.value?.trim() || ""
 
-        nota_fiscal:
-        document.getElementById(
-            "nfEntrada"
-        ).value.trim(),
-
-        observacao:
-        document.getElementById(
-            "obsEntrada"
-        ).value.trim(),
-
-        data_entrada:
-        new Date().toISOString()
-
-    };
+};
 
     if(!dados.material){
 
