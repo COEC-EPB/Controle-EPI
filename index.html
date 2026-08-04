@@ -2264,21 +2264,29 @@ console.log(
 
 function limparEntradaMaterial(){
 
-    document.getElementById("materialEntrada")?.value = "";
+    const material = document.getElementById("materialEntrada");
+    if(material) material.value = "";
 
-    document.getElementById("codigoEntrada")?.value = "";
+    const codigo = document.getElementById("codigoEntrada");
+    if(codigo) codigo.value = "";
 
-    document.getElementById("quantidadeEntrada")?.value = 1;
+    const quantidade = document.getElementById("quantidadeEntrada");
+    if(quantidade) quantidade.value = 1;
 
-    document.getElementById("poloEntrada")?.value = "";
+    const polo = document.getElementById("poloEntrada");
+    if(polo) polo.value = "";
 
-    document.getElementById("baseEntrada")?.value = "";
+    const base = document.getElementById("baseEntrada");
+    if(base) base.innerHTML = '<option value="">Selecione</option>';
 
-    document.getElementById("recebedorEntrada")?.value = "";
+    const recebedor = document.getElementById("recebedorEntrada");
+    if(recebedor) recebedor.value = "";
 
-    document.getElementById("fornecedorEntrada")?.value = "";
+    const fornecedor = document.getElementById("fornecedorEntrada");
+    if(fornecedor) fornecedor.value = "";
 
-    document.getElementById("obsEntrada")?.value = "";
+        const obs = document.getElementById("obsEntrada");
+    if(obs) obs.value = "";
 
 }
 </script>
