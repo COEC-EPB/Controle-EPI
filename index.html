@@ -2120,10 +2120,6 @@ console.log(
 );
 
 console.log(
-    document.getElementById("nfEntrada")
-);
-
-console.log(
     document.getElementById("obsEntrada")
 );
         console.log("clicou salvar");
@@ -2172,12 +2168,7 @@ console.log(
         "fornecedorEntrada"
     )?.value?.trim() || "",
 
-    nota_fiscal:
-    document.getElementById(
-        "nfEntrada"
-    )?.value?.trim() || "",
-
-    observacao:
+        observacao:
     document.getElementById(
         "obsEntrada"
     )?.value?.trim() || ""
@@ -2243,12 +2234,16 @@ console.log(
         }
 
         alert(
-            "✅ Material adicionado ao estoque."
-        );
+    "✅ Material adicionado ao estoque."
+);
 
-        limparEntradaMaterial();
+limparEntradaMaterial();
 
-        await carregarDashboard();
+fecharEntradaMaterial();
+
+await carregarDashboard();
+
+await carregarMovimentacoes();
 
     }
 
