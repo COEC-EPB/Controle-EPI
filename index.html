@@ -551,6 +551,21 @@ RODAPÉ DASHBOARD
     border-radius:10px;
     cursor:pointer;
 }   
+    .status-ativo{
+    background:#28A745;
+    color:white;
+    padding:5px 10px;
+    border-radius:20px;
+    font-size:12px;
+}
+
+.status-inativo{
+    background:#DC3545;
+    color:white;
+    padding:5px 10px;
+    border-radius:20px;
+    font-size:12px;
+}
 
 </style>
 
@@ -607,10 +622,10 @@ RODAPÉ DASHBOARD
             Relatórios
         </a>
 
-        <a>
-            <i class="bi bi-gear"></i>
-            Configurações
-        </a>
+        <a javascript:void(0) onclick="abrirConfiguracoes()">
+    <i class="bi bi-gear"></i>
+    Configurações
+</a>
 
     </nav>
 
@@ -764,6 +779,190 @@ onclick="window.location.href='https://coec-epb.github.io/colaboradores_material
         </div>
 
     </section>
+
+    <section class="box" id="painelConfiguracoes" style="display:none; margin-top:25px;">
+
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:15px; flex-wrap:wrap;">
+
+        <div>
+            <h3>⚙️ Configurações do Sistema</h3>
+            <small>Gerenciamento de usuários, permissões e acessos.</small>
+        </div>
+
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+
+            <input
+                type="text"
+                id="pesquisaUsuarioSistema"
+                placeholder="Pesquisar nome ou matrícula..."
+                style="
+                    height:42px;
+                    border:1px solid #ddd;
+                    border-radius:10px;
+                    padding:0 12px;
+                    min-width:260px;
+                "
+            >
+
+            <button
+                class="btn-salvar"
+                onclick="abrirModalUsuarioSistema()">
+                ➕ Novo usuário
+            </button>
+
+            <button
+                class="btn-cancelar"
+                onclick="fecharConfiguracoes()">
+                Fechar
+            </button>
+
+        </div>
+
+    </div>
+
+    <div style="overflow:auto; margin-top:20px;">
+
+        <table width="100%" style="border-collapse:collapse;">
+
+            <thead>
+
+                <tr style="background:#f1f5f9;">
+
+                    <th style="padding:10px; text-align:left;">Matrícula</th>
+                    <th style="padding:10px; text-align:left;">Nome</th>
+                    <th style="padding:10px; text-align:left;">Regional</th>
+                    <th style="padding:10px; text-align:left;">Polo</th>
+                    <th style="padding:10px; text-align:left;">Base</th>
+                    <th style="padding:10px; text-align:left;">Perfil</th>
+                    <th style="padding:10px; text-align:left;">Ativo</th>
+                    <th style="padding:10px; text-align:left;">Ações</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="tabelaUsuariosSistema">
+
+                <tr>
+                    <td colspan="8" style="padding:15px; text-align:center; color:#777;">
+                        Clique em Configurações para carregar os usuários.
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+    <div class="modal-overlay" id="modalUsuarioSistema">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <h2 id="tituloModalUsuario">
+                👤 Novo usuário
+            </h2>
+
+            <button
+                class="fechar-modal"
+                onclick="fecharModalUsuarioSistema()">
+                ×
+            </button>
+
+        </div>
+
+        <input type="hidden" id="usuarioModo" value="novo">
+
+        <div class="form-grid">
+
+            <div>
+                <label>Matrícula</label>
+                <input id="usuarioMatricula">
+            </div>
+
+            <div>
+                <label>Nome</label>
+                <input id="usuarioNome">
+            </div>
+
+            <div>
+                <label>CPF</label>
+                <input id="usuarioCPF" placeholder="Somente números">
+            </div>
+
+            <div>
+                <label>Senha</label>
+                <input id="usuarioSenha" type="password" placeholder="Obrigatória para novo usuário">
+            </div>
+
+            <div>
+                <label>Regional</label>
+                <select id="usuarioRegional">
+                    <option value="">Selecione</option>
+                    <option value="LESTE">LESTE</option>
+                    <option value="CENTRO">CENTRO</option>
+                    <option value="OESTE">OESTE</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Polo</label>
+                <select id="usuarioPolo" onchange="atualizarBasesUsuario()">
+                    <option value="">Selecione</option>
+                    <option value="JOÃO PESSOA">JOÃO PESSOA</option>
+                    <option value="ITABAIANA">ITABAIANA</option>
+                    <option value="MAMANGUAPE">MAMANGUAPE</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Base</label>
+                <select id="usuarioBase">
+                    <option value="">Selecione</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Perfil</label>
+                <select id="usuarioRole">
+                    <option value="user">Usuário</option>
+                    <option value="admin">Administrador</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Status</label>
+                <select id="usuarioAtivo">
+                    <option value="1">Ativo</option>
+                    <option value="0">Inativo</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="modal-footer">
+
+            <button
+                class="btn-cancelar"
+                onclick="fecharModalUsuarioSistema()">
+                Cancelar
+            </button>
+
+            <button
+                class="btn-salvar"
+                onclick="salvarUsuarioSistema()">
+                Salvar usuário
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
 
     <section class="graficos">
 
@@ -2283,6 +2482,579 @@ function limparEntradaMaterial(){
     if(obs) obs.value = "";
 
 }
+
+    /* ======================================================
+   CONFIGURAÇÕES / USUÁRIOS DO SISTEMA
+====================================================== */
+
+window.API = window.API || "https://material.pedro-fillype.workers.dev";
+
+let usuariosSistemaCache = [];
+
+function abrirConfiguracoes(){
+
+    const painel =
+        document.getElementById("painelConfiguracoes");
+
+    if(!painel){
+        alert("Painel de configurações não encontrado.");
+        return;
+    }
+
+    painel.style.display = "block";
+
+    painel.scrollIntoView({
+        behavior:"smooth",
+        block:"start"
+    });
+
+    carregarUsuariosSistema();
+
+}
+
+function fecharConfiguracoes(){
+
+    const painel =
+        document.getElementById("painelConfiguracoes");
+
+    if(painel){
+        painel.style.display = "none";
+    }
+
+}
+
+function atualizarBasesUsuario(){
+
+    const polo =
+        document.getElementById("usuarioPolo").value;
+
+    const selectBase =
+        document.getElementById("usuarioBase");
+
+    selectBase.innerHTML =
+        `<option value="">Selecione</option>`;
+
+    if(!BASES_POR_POLO[polo]){
+        return;
+    }
+
+    BASES_POR_POLO[polo].forEach(base => {
+
+        selectBase.innerHTML += `
+            <option value="${base}">
+                ${base}
+            </option>
+        `;
+
+    });
+
+}
+
+function abrirModalUsuarioSistema(){
+
+    document.getElementById("tituloModalUsuario").innerText =
+        "👤 Novo usuário";
+
+    document.getElementById("usuarioModo").value =
+        "novo";
+
+    document.getElementById("usuarioMatricula").disabled =
+        false;
+
+    limparFormularioUsuarioSistema();
+
+    document.getElementById("modalUsuarioSistema").style.display =
+        "flex";
+
+}
+
+function fecharModalUsuarioSistema(){
+
+    document.getElementById("modalUsuarioSistema").style.display =
+        "none";
+
+}
+
+function limparFormularioUsuarioSistema(){
+
+    document.getElementById("usuarioMatricula").value = "";
+    document.getElementById("usuarioNome").value = "";
+    document.getElementById("usuarioCPF").value = "";
+    document.getElementById("usuarioSenha").value = "";
+    document.getElementById("usuarioRegional").value = "";
+    document.getElementById("usuarioPolo").value = "";
+    document.getElementById("usuarioBase").innerHTML =
+        `<option value="">Selecione</option>`;
+    document.getElementById("usuarioRole").value = "user";
+    document.getElementById("usuarioAtivo").value = "1";
+
+}
+
+async function carregarUsuariosSistema(){
+
+    const tbody =
+        document.getElementById("tabelaUsuariosSistema");
+
+    tbody.innerHTML = `
+        <tr>
+            <td colspan="8" style="padding:15px; text-align:center;">
+                Carregando usuários...
+            </td>
+        </tr>
+    `;
+
+    try{
+
+        const resp =
+            await authFetch(`${API}/usuarios-sistema`);
+
+        const json =
+            await resp.json().catch(() => ({}));
+
+        if(!resp.ok || json.ok === false){
+            throw new Error(
+                json.error ||
+                json.erro ||
+                "Erro ao carregar usuários."
+            );
+        }
+
+        usuariosSistemaCache =
+            json.items || [];
+
+        renderUsuariosSistema();
+
+    }catch(e){
+
+        console.error(e);
+
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="8" style="padding:15px; text-align:center; color:#dc3545;">
+                    Erro ao carregar usuários: ${e.message}
+                </td>
+            </tr>
+        `;
+
+    }
+
+}
+
+function renderUsuariosSistema(){
+
+    const tbody =
+        document.getElementById("tabelaUsuariosSistema");
+
+    const termo =
+        String(
+            document.getElementById("pesquisaUsuarioSistema")?.value || ""
+        )
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .trim();
+
+    let lista =
+        [...usuariosSistemaCache];
+
+    if(termo){
+
+        lista =
+            lista.filter(item => {
+
+                const nome =
+                    String(item.nome || "")
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                    .toLowerCase();
+
+                const matricula =
+                    String(item.matricula || "")
+                    .toLowerCase();
+
+                return (
+                    nome.includes(termo) ||
+                    matricula.includes(termo)
+                );
+
+            });
+
+    }
+
+    if(!lista.length){
+
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="8" style="padding:15px; text-align:center; color:#777;">
+                    Nenhum usuário encontrado.
+                </td>
+            </tr>
+        `;
+
+        return;
+
+    }
+
+    tbody.innerHTML =
+        lista.map(item => {
+
+            const ativo =
+                Number(item.ativo) === 1;
+
+            const roleTexto =
+                item.role === "admin"
+                ? "Administrador"
+                : "Usuário";
+
+            return `
+                <tr>
+
+                    <td style="padding:10px; border-bottom:1px solid #eee;">
+                        ${escaparHTMLLocal(item.matricula)}
+                    </td>
+
+                    <td style="padding:10px; border-bottom:1px solid #eee;">
+                        ${escaparHTMLLocal(item.nome)}
+                    </td>
+
+                    <td style="padding:10px; border-bottom:1px solid #eee;">
+                        ${escaparHTMLLocal(item.regional)}
+                    </td>
+
+                    <td style="padding:10px; border-bottom:1px solid #eee;">
+                        ${escaparHTMLLocal(item.polo)}
+                    </td>
+
+                    <td style="padding:10px; border-bottom:1px solid #eee;">
+                        ${escaparHTMLLocal(item.base)}
+                    </td>
+
+                    <td style="padding:10px; border-bottom:1px solid #eee;">
+                        ${roleTexto}
+                    </td>
+
+                    <td style="padding:10px; border-bottom:1px solid #eee;">
+                        ${ativo ? "Ativo" : "Inativo"}
+                    </td>
+
+                    <td style="padding:10px; border-bottom:1px solid #eee; white-space:nowrap;">
+
+                        <button
+                            class="btn-salvar"
+                            style="padding:8px 10px;"
+                            onclick="editarUsuarioSistema('${escaparAtributo(item.matricula)}')">
+                            Editar
+                        </button>
+
+                        <button
+                            class="btn-cancelar"
+                            style="padding:8px 10px;"
+                            onclick="alternarAtivoUsuarioSistema('${escaparAtributo(item.matricula)}', ${ativo ? 0 : 1})">
+                            ${ativo ? "Desativar" : "Ativar"}
+                        </button>
+
+                        <button
+                            style="
+                                background:#dc3545;
+                                color:white;
+                                border:none;
+                                padding:8px 10px;
+                                border-radius:10px;
+                                cursor:pointer;
+                            "
+                            onclick="excluirUsuarioSistema('${escaparAtributo(item.matricula)}')">
+                            Excluir
+                        </button>
+
+                    </td>
+
+                </tr>
+            `;
+
+        }).join("");
+
+}
+
+function editarUsuarioSistema(matricula){
+
+    const usuario =
+        usuariosSistemaCache.find(
+            item => String(item.matricula) === String(matricula)
+        );
+
+    if(!usuario){
+        alert("Usuário não encontrado.");
+        return;
+    }
+
+    document.getElementById("tituloModalUsuario").innerText =
+        "✏️ Editar usuário";
+
+    document.getElementById("usuarioModo").value =
+        "editar";
+
+    document.getElementById("usuarioMatricula").value =
+        usuario.matricula || "";
+
+    document.getElementById("usuarioMatricula").disabled =
+        true;
+
+    document.getElementById("usuarioNome").value =
+        usuario.nome || "";
+
+    document.getElementById("usuarioCPF").value =
+        usuario.cpf || "";
+
+    document.getElementById("usuarioSenha").value =
+        "";
+
+    document.getElementById("usuarioRegional").value =
+        usuario.regional || "";
+
+    document.getElementById("usuarioPolo").value =
+        usuario.polo || "";
+
+    atualizarBasesUsuario();
+
+    document.getElementById("usuarioBase").value =
+        usuario.base || "";
+
+    document.getElementById("usuarioRole").value =
+        usuario.role === "admin"
+        ? "admin"
+        : "user";
+
+    document.getElementById("usuarioAtivo").value =
+        Number(usuario.ativo) === 1
+        ? "1"
+        : "0";
+
+    document.getElementById("modalUsuarioSistema").style.display =
+        "flex";
+
+}
+
+async function salvarUsuarioSistema(){
+
+    const modo =
+        document.getElementById("usuarioModo").value;
+
+    const matricula =
+        document.getElementById("usuarioMatricula").value.trim();
+
+    const nome =
+        document.getElementById("usuarioNome").value.trim();
+
+    const cpf =
+        document.getElementById("usuarioCPF").value.replace(/\D/g, "");
+
+    const senha =
+        document.getElementById("usuarioSenha").value.trim();
+
+    const regional =
+        document.getElementById("usuarioRegional").value;
+
+    const polo =
+        document.getElementById("usuarioPolo").value;
+
+    const base =
+        document.getElementById("usuarioBase").value;
+
+    const role =
+        document.getElementById("usuarioRole").value;
+
+    const ativo =
+        Number(document.getElementById("usuarioAtivo").value);
+
+    if(!matricula || !nome || !regional || !polo || !base){
+        alert("Preencha matrícula, nome, regional, polo e base.");
+        return;
+    }
+
+    if(cpf && cpf.length !== 11){
+        alert("CPF deve possuir 11 números.");
+        return;
+    }
+
+    if(modo === "novo" && !senha){
+        alert("Informe a senha para novo usuário.");
+        return;
+    }
+
+    try{
+
+        const payload = {
+            matricula,
+            nome,
+            cpf,
+            senha,
+            regional,
+            polo,
+            base,
+            role,
+            ativo
+        };
+
+        const url =
+            modo === "novo"
+            ? `${API}/usuarios-sistema`
+            : `${API}/usuarios-sistema/${encodeURIComponent(matricula)}`;
+
+        const metodo =
+            modo === "novo"
+            ? "POST"
+            : "PUT";
+
+        const resp =
+            await authFetch(
+                url,
+                {
+                    method:metodo,
+                    headers:{
+                        "Content-Type":"application/json"
+                    },
+                    body:JSON.stringify(payload)
+                }
+            );
+
+        const json =
+            await resp.json().catch(() => ({}));
+
+        if(!resp.ok || json.ok === false){
+            throw new Error(
+                json.error ||
+                json.erro ||
+                "Erro ao salvar usuário."
+            );
+        }
+
+        alert("✅ Usuário salvo com sucesso.");
+
+        fecharModalUsuarioSistema();
+
+        await carregarUsuariosSistema();
+
+    }catch(e){
+
+        console.error(e);
+
+        alert("❌ " + e.message);
+
+    }
+
+}
+
+async function alternarAtivoUsuarioSistema(matricula, ativo){
+
+    try{
+
+        const resp =
+            await authFetch(
+                `${API}/usuarios-sistema/${encodeURIComponent(matricula)}/ativo`,
+                {
+                    method:"PUT",
+                    headers:{
+                        "Content-Type":"application/json"
+                    },
+                    body:JSON.stringify({ ativo })
+                }
+            );
+
+        const json =
+            await resp.json().catch(() => ({}));
+
+        if(!resp.ok || json.ok === false){
+            throw new Error(
+                json.error ||
+                "Erro ao alterar status."
+            );
+        }
+
+        await carregarUsuariosSistema();
+
+    }catch(e){
+
+        console.error(e);
+        alert("❌ " + e.message);
+
+    }
+
+}
+
+async function excluirUsuarioSistema(matricula){
+
+    const confirmar =
+        confirm(
+            `Tem certeza que deseja excluir o usuário ${matricula}?`
+        );
+
+    if(!confirmar){
+        return;
+    }
+
+    try{
+
+        const resp =
+            await authFetch(
+                `${API}/usuarios-sistema/${encodeURIComponent(matricula)}`,
+                {
+                    method:"DELETE"
+                }
+            );
+
+        const json =
+            await resp.json().catch(() => ({}));
+
+        if(!resp.ok || json.ok === false){
+            throw new Error(
+                json.error ||
+                "Erro ao excluir usuário."
+            );
+        }
+
+        alert("✅ Usuário excluído com sucesso.");
+
+        await carregarUsuariosSistema();
+
+    }catch(e){
+
+        console.error(e);
+        alert("❌ " + e.message);
+
+    }
+
+}
+
+function escaparHTMLLocal(valor){
+
+    return String(valor ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+function escaparAtributo(valor){
+
+    return String(valor ?? "")
+        .replace(/\\/g, "\\\\")
+        .replace(/'/g, "\\'")
+        .replace(/"/g, "&quot;");
+
+}
+
+document.addEventListener("input", function(e){
+
+    if(
+        e.target &&
+        e.target.id === "pesquisaUsuarioSistema"
+    ){
+        renderUsuariosSistema();
+    }
+
+});
 </script>
 
 </body>
