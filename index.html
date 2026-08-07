@@ -831,7 +831,6 @@ onclick="window.location.href='https://coec-epb.github.io/colaboradores_material
                     <th style="padding:10px; text-align:left;">Matrícula</th>
                     <th style="padding:10px; text-align:left;">Nome</th>
                     <th style="padding:10px; text-align:left;">Regional</th>
-                    <th style="padding:10px; text-align:left;">Polo</th>
                     <th style="padding:10px; text-align:left;">Base</th>
                     <th style="padding:10px; text-align:left;">Perfil</th>
                     <th style="padding:10px; text-align:left;">Ativo</th>
@@ -844,7 +843,7 @@ onclick="window.location.href='https://coec-epb.github.io/colaboradores_material
             <tbody id="tabelaUsuariosSistema">
 
                 <tr>
-                    <td colspan="8" style="padding:15px; text-align:center; color:#777;">
+                    <td colspan="7" style="padding:15px; text-align:center; color:#777;">
                         Clique em Configurações para carregar os usuários.
                     </td>
                 </tr>
@@ -910,21 +909,9 @@ onclick="window.location.href='https://coec-epb.github.io/colaboradores_material
             </div>
 
             <div>
-                <label>Polo</label>
-                <select id="usuarioPolo" onchange="atualizarBasesUsuario()">
-                    <option value="">Selecione</option>
-                    <option value="JOÃO PESSOA">JOÃO PESSOA</option>
-                    <option value="ITABAIANA">ITABAIANA</option>
-                    <option value="MAMANGUAPE">MAMANGUAPE</option>
-                </select>
-            </div>
-
-            <div>
-                <label>Base</label>
-                <select id="usuarioBase">
-                    <option value="">Selecione</option>
-                </select>
-            </div>
+    <label>Base</label>
+    <input id="usuarioBase" placeholder="Digite a base">
+</div>
 
             <div>
                 <label>Perfil</label>
@@ -2722,10 +2709,6 @@ function renderUsuariosSistema(){
                     </td>
 
                     <td style="padding:10px; border-bottom:1px solid #eee;">
-                        ${escaparHTMLLocal(item.polo)}
-                    </td>
-
-                    <td style="padding:10px; border-bottom:1px solid #eee;">
                         ${escaparHTMLLocal(item.base)}
                     </td>
 
@@ -2811,10 +2794,6 @@ function editarUsuarioSistema(matricula){
     document.getElementById("usuarioRegional").value =
         usuario.regional || "";
 
-    document.getElementById("usuarioPolo").value =
-        usuario.polo || "";
-
-    atualizarBasesUsuario();
 
     document.getElementById("usuarioBase").value =
         usuario.base || "";
@@ -2854,9 +2833,7 @@ async function salvarUsuarioSistema(){
     const regional =
         document.getElementById("usuarioRegional").value;
 
-    const polo =
-        document.getElementById("usuarioPolo").value;
-
+    
     const base =
         document.getElementById("usuarioBase").value;
 
@@ -2866,10 +2843,10 @@ async function salvarUsuarioSistema(){
     const ativo =
         Number(document.getElementById("usuarioAtivo").value);
 
-    if(!matricula || !nome || !regional || !polo || !base){
-        alert("Preencha matrícula, nome, regional, polo e base.");
-        return;
-    }
+    if(!matricula || !nome || !regional){
+    alert("Preencha matrícula, nome e regional.");
+    return;
+}
 
     if(cpf && cpf.length !== 11){
         alert("CPF deve possuir 11 números.");
@@ -2889,7 +2866,6 @@ async function salvarUsuarioSistema(){
             cpf,
             senha,
             regional,
-            polo,
             base,
             role,
             ativo
