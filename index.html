@@ -1965,27 +1965,29 @@ function renderMovimentacoes(lista){
     lista.slice(0, 6).map(item => {
 
         const hora =
-        item.hora ||
-        item.data_hora ||
-        item.data ||
-        "--";
+    item.criado_em
+    ? new Date(item.criado_em)
+        .toLocaleDateString("pt-BR")
+    : "--";
 
         const usuario =
+        item.criado_por ||
         item.usuario ||
         item.colaborador ||
         item.nome ||
         "Usuário";
 
         const acao =
-        item.acao ||
-        item.tipo ||
-        "Movimentou";
+    item.operacao ||
+    item.acao ||
+    item.tipo ||
+    "Entrada";
 
-        const equipamento =
-        item.equipamento ||
-        item.material ||
-        item.descricao ||
-        "";
+const equipamento =
+    item.material ||
+    item.equipamento ||
+    item.descricao ||
+    "";
 
         return `
             <div class="timeline-item">
