@@ -3404,18 +3404,29 @@ async function salvarUsuarioSistema(){
     polo,
     base
 });
+        alert(
+    JSON.stringify({
+        matricula,
+        nome,
+        regional,
+        polo,
+        base
+    })
+);
 
         const payload = {
-            matricula,
-            nome,
-            cpf,
-            senha,
-            regional,
-            polo,
-            base,
-            role,
-            ativo
-        };
+    matricula: matricula,
+    nome: nome,
+    cpf: cpf,
+    senha: senha,
+    regional: regional,
+    polo: polo,
+    base: base,
+    role: role,
+    ativo: ativo
+};
+
+console.log(payload);
 
         const url =
             modo === "novo"
