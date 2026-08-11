@@ -2296,8 +2296,25 @@ lista.map(item => {
 
     try{
 
-        const fotos =
-        JSON.parse(item.fotos || "[]");
+        let fotos = [];
+
+try{
+
+    if(
+        item.fotos &&
+        item.fotos !== "null"
+    ){
+
+        fotos =
+        JSON.parse(item.fotos);
+
+    }
+
+}catch(e){
+
+    fotos = [];
+
+}
 
         if(fotos.length){
 
