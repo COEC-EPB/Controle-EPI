@@ -1006,15 +1006,15 @@ onclick="window.location.href='https://coec-epb.github.io/colaboradores_material
         <div class="box">
 
             <h3>
-                Equipamentos Vencendo
+                🚨 Trocas em menos de 30 dias
             </h3>
-
+            
             <table width="100%">
-
-                <tbody id="vencimentos">
-
+            
+                <tbody id="alertasTroca">
+            
                 </tbody>
-
+            
             </table>
 
         </div>
@@ -1122,6 +1122,36 @@ id="modalEntradaMaterial">
             </div>
 
         </div>
+
+        <div
+class="modal-overlay"
+id="modalHistoricoTroca">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <h2 id="tituloHistoricoTroca">
+                Histórico de Trocas
+            </h2>
+
+            <button
+            class="fechar-modal"
+            onclick="fecharHistoricoTroca()">
+
+                ×
+
+            </button>
+
+        </div>
+
+        <div id="conteudoHistoricoTroca">
+
+        </div>
+
+    </div>
+
+</div>
 
         <div class="modal-footer">
 
@@ -2017,64 +2047,316 @@ const equipamento =
    EQUIPAMENTOS VENCENDO
 ====================================================== */
 
-async function carregarVencimentos(){
+async function carregarAlertasTroca(){
 
     const tbody =
-    el("vencimentos");
+    document.getElementById("alertasTroca");
 
     if(!tbody){
         return;
     }
 
-    try{
-
-        if(
-            typeof API !== "undefined" &&
-            typeof authFetch === "function"
-        ){
-
-            const resp =
-            await authFetch(
-                `${API}/equipamentos/vencendo`
-            );
-
-            if(resp.ok){
-
-                const dados =
-                await resp.json();
-
-                const lista =
-                dados.dados ||
-                dados.vencimentos ||
-                [];
-
-                if(lista.length){
-
-                    renderVencimentos(
-                        lista
-                    );
-
-                    return;
-
-                }
-
-            }
-
-        }
-
-    }catch(e){
-        console.warn(
-            "Vencimentos ainda sem endpoint. Usando estado vazio."
-        );
-    }
-
     tbody.innerHTML = `
         <tr>
-            <td colspan="2">
-                Nenhum equipamento vencendo no momento.
+            <td style="padding:12px;">
+                Carregando alertas...
             </td>
         </tr>
     `;
+
+    try{
+
+        const resp =
+        await authFetch(
+            `${API}/alertas-troca`
+        );
+
+        const dados =
+        await resp.json();
+
+        if(
+            !resp.ok ||
+            dados.sucesso === false
+        ){
+            throw new Error(
+                dados.mensagem ||
+                "Erro ao carregar alertas."
+            );
+        }
+
+        const lista =
+        dados.dados || [];
+
+        if(!lista.length){
+
+            tbody.innerHTML = `
+                <tr>
+                    <td style="padding:12px; color:#777;">
+                        Nenhuma troca repetida em menos de 30 dias.
+                    </td>
+                </tr>
+            `;
+
+            return;
+
+        }
+
+        renderAlertasTroca(lista);
+
+    }catch(e){
+
+        console.error(e);
+
+        tbody.innerHTML = `
+            <tr>
+                <td style="padding:12px; color:#dc3545;">
+                    Erro ao carregar alertas: ${e.message}
+                </td>
+            </tr>
+        `;
+
+    }
+
+}
+    function renderAlertasTroca(lista){
+
+    const tbody =
+    document.getElementById("alertasTroca");
+
+    if(!tbody){
+        return;
+    }
+
+    tbody.innerHTML =
+    lista.slice(0, 8).map(item => {
+
+        let cor =
+        "#FFC107";
+
+        let textoNivel =
+        "Monitorar";
+
+        if(item.nivel === "critico"){
+            cor = "#DC3545";
+            textoNivel = "Crítico";
+        }
+
+        if(item.nivel === "atencao"){
+            cor = "#F36F21";
+            textoNivel = "Atenção";
+        }
+
+        return `
+            <tr
+            style="cursor:pointer;"
+            onclick="abrirHistoricoTroca(
+                '${escaparAtributo(item.matricula)}',
+                '${escaparAtributo(item.material)}',
+                '${escaparAtributo(item.colaborador)}'
+            )">
+
+                <td style="
+                    padding:12px 6px;
+                    border-bottom:1px solid #eee;
+                ">
+
+                    <strong>
+                        ${escaparHTMLLocal(item.colaborador)}
+                    </strong>
+
+                    <br>
+
+                    <span>
+                        ${escaparHTMLLocal(item.material)}
+                    </span>
+
+                    <br>
+
+                    <small style="color:#777;">
+                        Troca em ${item.dias_entre_trocas} dia(s)
+                    </small>
+
+                </td>
+
+                <td style="
+                    padding:12px 6px;
+                    border-bottom:1px solid #eee;
+                    text-align:right;
+                ">
+
+                    <span style="
+                        background:${cor};
+                        color:white;
+                        padding:5px 10px;
+                        border-radius:20px;
+                        font-size:12px;
+                        font-weight:700;
+                    ">
+                        ${textoNivel}
+                    </span>
+
+                </td>
+
+            </tr>
+        `;
+
+    }).join("");
+
+}
+
+async function abrirHistoricoTroca(
+    matricula,
+    material,
+    colaborador
+){
+
+    const modal =
+    document.getElementById("modalHistoricoTroca");
+
+    const titulo =
+    document.getElementById("tituloHistoricoTroca");
+
+    const conteudo =
+    document.getElementById("conteudoHistoricoTroca");
+
+    if(!modal || !conteudo){
+        return;
+    }
+
+    titulo.innerText =
+    `Histórico - ${colaborador}`;
+
+    conteudo.innerHTML = `
+        <p style="color:#777;">
+            Carregando histórico...
+        </p>
+    `;
+
+    modal.style.display =
+    "flex";
+
+    try{
+
+        const url =
+        `${API}/alertas-troca/historico`
+        + `?matricula=${encodeURIComponent(matricula)}`
+        + `&material=${encodeURIComponent(material)}`;
+
+        const resp =
+        await authFetch(url);
+
+        const dados =
+        await resp.json();
+
+        if(
+            !resp.ok ||
+            dados.sucesso === false
+        ){
+            throw new Error(
+                dados.mensagem ||
+                "Erro ao carregar histórico."
+            );
+        }
+
+        const lista =
+        dados.dados || [];
+
+        if(!lista.length){
+
+            conteudo.innerHTML = `
+                <p style="color:#777;">
+                    Nenhuma movimentação encontrada para este material.
+                </p>
+            `;
+
+            return;
+
+        }
+
+        conteudo.innerHTML =
+        lista.map(item => {
+
+            const data =
+            item.data_movimentacao ||
+            item.criado_em ||
+            "";
+
+            const dataFormatada =
+            data
+            ? new Date(data).toLocaleDateString("pt-BR")
+            : "--";
+
+            const materialMov =
+            item.equipamento_novo ||
+            item.equipamento ||
+            "";
+
+            return `
+                <div style="
+                    border-left:5px solid #0097CE;
+                    padding:12px 15px;
+                    margin-bottom:12px;
+                    background:#F8FAFC;
+                    border-radius:12px;
+                ">
+
+                    <strong>
+                        ${escaparHTMLLocal(item.operacao || "Movimentação")}
+                    </strong>
+
+                    <br>
+
+                    <small style="color:#777;">
+                        ${dataFormatada}
+                    </small>
+
+                    <p style="margin-top:8px;">
+                        <b>Material:</b>
+                        ${escaparHTMLLocal(materialMov)}
+                        <br>
+
+                        <b>Quantidade:</b>
+                        ${Number(item.quantidade || 0)}
+                        <br>
+
+                        <b>Responsável:</b>
+                        ${escaparHTMLLocal(item.responsavel || item.criado_por || "")}
+                    </p>
+
+                    ${
+                        item.observacao
+                        ? `<p><b>Obs.:</b> ${escaparHTMLLocal(item.observacao)}</p>`
+                        : ""
+                    }
+
+                </div>
+            `;
+
+        }).join("");
+
+    }catch(e){
+
+        console.error(e);
+
+        conteudo.innerHTML = `
+            <p style="color:#dc3545;">
+                Erro ao carregar histórico: ${e.message}
+            </p>
+        `;
+
+    }
+
+}
+
+function fecharHistoricoTroca(){
+
+    const modal =
+    document.getElementById("modalHistoricoTroca");
+
+    if(modal){
+        modal.style.display =
+        "none";
+    }
 
 }
 
@@ -2280,7 +2562,7 @@ document.addEventListener(
 
         await carregarMovimentacoes();
 
-        /*await carregarVencimentos();*/
+        await carregarAlertasTroca();
 
     }
 );
