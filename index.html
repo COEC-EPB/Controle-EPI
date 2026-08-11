@@ -2204,7 +2204,409 @@ async function carregarAlertasTroca(){
 
 }
 
+async function abrirHistoricoTroca(
+    matricula,
+    material,
+    colaborador
+) {
 
+    const modal =
+        document.getElementById("modalHistoricoTroca");
+
+    const titulo =
+        document.getElementById("tituloHistoricoTroca");
+
+    const conteudo =
+        document.getElementById("conteudoHistoricoTroca");
+
+    if (!modal || !conteudo) {
+        return;
+    }
+
+    titulo.innerText =
+        `Histórico - ${colaborador}`;
+
+    conteudo.innerHTML = `
+        <p style="color:#777;">
+            Carregando histórico...
+        </p>
+    `;
+
+    modal.style.display = "flex";
+
+    try {
+
+        const url =
+            `${API}/alertas-troca/historico`
+            + `?matricula=${encodeURIComponent(matricula)}`
+            + `&material=${encodeURIComponent(material)}`;
+
+        const resp =
+            await authFetch(url);
+
+        const dados =
+            await resp.json();
+
+        if (
+            !resp.ok ||
+            dados.sucesso === false
+        ) {
+            throw new Error(
+                dados.mensagem ||
+                "Erro ao carregar histórico."
+            );
+        }
+
+        const lista =
+            dados.dados || [];
+
+        if (!lista.length) {
+
+            conteudo.innerHTML = `
+                <p style="
+                    color:#777;
+                    padding:15px;
+                ">
+                    Nenhuma movimentação encontrada para este material.
+                </p>
+            `;
+
+            return;
+        }
+
+        conteudo.innerHTML =
+            lista.map(item => {
+
+                /* ============================
+                   DATA
+                ============================ */
+
+                const data =
+                    item.data_movimentacao ||
+                    item.criado_em ||
+                    "";
+
+                let dataFormatada = "--";
+
+                if (data) {
+
+                    const dataObj =
+                        new Date(data);
+
+                    if (!isNaN(dataObj.getTime())) {
+
+                        dataFormatada =
+                            dataObj.toLocaleDateString(
+                                "pt-BR"
+                            );
+                    }
+                }
+
+
+                /* ============================
+                   MATERIAL
+                ============================ */
+
+                const materialMov =
+                    item.equipamento_novo ||
+                    item.equipamento ||
+                    material ||
+                    "--";
+
+
+                /* ============================
+                   FOTOS
+                ============================ */
+
+                let fotos = [];
+
+                try {
+
+                    if (
+                        item.fotos &&
+                        item.fotos !== "null" &&
+                        item.fotos !== "undefined"
+                    ) {
+
+                        /*
+                         * Caso fotos já seja um array
+                         */
+                        if (Array.isArray(item.fotos)) {
+
+                            fotos = item.fotos;
+
+                        }
+
+                        /*
+                         * Caso venha como JSON string
+                         */
+                        else if (
+                            typeof item.fotos === "string"
+                        ) {
+
+                            const valor =
+                                JSON.parse(item.fotos);
+
+                            if (Array.isArray(valor)) {
+
+                                fotos = valor;
+
+                            } else if (valor) {
+
+                                fotos = [valor];
+
+                            }
+                        }
+                    }
+
+                } catch (erroFotos) {
+
+                    console.warn(
+                        "Erro ao interpretar fotos:",
+                        erroFotos
+                    );
+
+                    /*
+                     * Se não for JSON, mas for uma URL,
+                     * tenta usar diretamente.
+                     */
+                    if (
+                        typeof item.fotos === "string" &&
+                        item.fotos.startsWith("http")
+                    ) {
+
+                        fotos = [item.fotos];
+
+                    } else {
+
+                        fotos = [];
+                    }
+                }
+
+
+                /* ============================
+                   LIMPA E REMOVE DUPLICADAS
+                ============================ */
+
+                fotos = fotos
+                    .filter(foto =>
+                        typeof foto === "string" &&
+                        foto.trim() !== ""
+                    )
+                    .map(foto => foto.trim())
+                    .filter(
+                        (foto, index, array) =>
+                            array.indexOf(foto) === index
+                    );
+
+
+                /* ============================
+                   HTML DAS FOTOS
+                ============================ */
+
+                let fotosHtml = "";
+
+                if (fotos.length) {
+
+                    fotosHtml = `
+                        <div style="
+                            margin-top:15px;
+                        ">
+
+                            <div style="
+                                font-weight:600;
+                                margin-bottom:8px;
+                            ">
+                                Fotos:
+                            </div>
+
+                            <div style="
+                                display:flex;
+                                gap:10px;
+                                flex-wrap:wrap;
+                            ">
+
+                                ${fotos.map(foto => {
+
+                                    /*
+                                     * Verifica se é uma URL válida
+                                     */
+                                    let urlFoto = "";
+
+                                    try {
+
+                                        const urlObj =
+                                            new URL(foto);
+
+                                        if (
+                                            urlObj.protocol === "http:" ||
+                                            urlObj.protocol === "https:"
+                                        ) {
+
+                                            urlFoto =
+                                                urlObj.href;
+                                        }
+
+                                    } catch (e) {
+
+                                        return "";
+                                    }
+
+
+                                    if (!urlFoto) {
+                                        return "";
+                                    }
+
+
+                                    return `
+                                        <a
+                                            href="${urlFoto}"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            style="
+                                                display:block;
+                                                width:120px;
+                                                height:120px;
+                                                border-radius:10px;
+                                                overflow:hidden;
+                                                border:1px solid #ddd;
+                                                background:#fff;
+                                                cursor:pointer;
+                                            "
+                                            title="Clique para visualizar a foto"
+                                        >
+
+                                            <img
+                                                src="${urlFoto}"
+                                                alt="Foto da movimentação"
+                                                style="
+                                                    width:100%;
+                                                    height:100%;
+                                                    object-fit:cover;
+                                                    display:block;
+                                                "
+                                                onerror="
+                                                    this.style.display='none';
+                                                    this.parentElement.innerHTML='<span style=&quot;display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:12px;color:#777;text-align:center;padding:5px;&quot;>Imagem indisponível</span>';
+                                                "
+                                            >
+
+                                        </a>
+                                    `;
+
+                                }).join("")}
+
+                            </div>
+
+                        </div>
+                    `;
+                }
+
+
+                /* ============================
+                   CARD DO HISTÓRICO
+                ============================ */
+
+                return `
+                    <div style="
+                        border-left:5px solid #0097CE;
+                        padding:14px 15px;
+                        margin-bottom:12px;
+                        background:#F8FAFC;
+                        border-radius:12px;
+                    ">
+
+                        <strong style="
+                            font-size:16px;
+                            color:#111;
+                        ">
+                            ${escaparHTMLLocal(
+                                item.operacao ||
+                                "Movimentação"
+                            )}
+                        </strong>
+
+                        <br>
+
+                        <small style="
+                            color:#777;
+                        ">
+                            ${dataFormatada}
+                        </small>
+
+                        <p style="
+                            margin-top:10px;
+                            margin-bottom:0;
+                            line-height:1.6;
+                        ">
+
+                            <b>Material:</b>
+                            ${escaparHTMLLocal(
+                                materialMov
+                            )}
+
+                            <br>
+
+                            <b>Quantidade:</b>
+                            ${Number(
+                                item.quantidade || 0
+                            )}
+
+                            <br>
+
+                            <b>Responsável:</b>
+                            ${escaparHTMLLocal(
+                                item.responsavel ||
+                                item.criado_por ||
+                                "--"
+                            )}
+
+                        </p>
+
+                        ${
+                            item.observacao
+                            ? `
+                                <p style="
+                                    margin-top:8px;
+                                    margin-bottom:0;
+                                ">
+                                    <b>Obs.:</b>
+                                    ${escaparHTMLLocal(
+                                        item.observacao
+                                    )}
+                                </p>
+                            `
+                            : ""
+                        }
+
+                        ${fotosHtml}
+
+                    </div>
+                `;
+
+            }).join("");
+
+
+    } catch (e) {
+
+        console.error(
+            "Erro ao carregar histórico:",
+            e
+        );
+
+        conteudo.innerHTML = `
+            <p style="
+                color:#dc3545;
+                padding:15px;
+            ">
+                Erro ao carregar histórico:
+                ${escaparHTMLLocal(
+                    e.message || "Erro desconhecido."
+                )}
+            </p>
+        `;
+    }
+}
 function fecharHistoricoTroca(){
 
     const modal =
