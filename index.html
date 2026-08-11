@@ -925,7 +925,9 @@ onclick="window.location.href='https://coec-epb.github.io/colaboradores_material
 
             <div>
     <label>Base</label>
-    <input id="usuarioBase" placeholder="Digite a base">
+    <select id="usuarioBase">
+    <option value="">Selecione</option>
+</select>
 </div>
 
             <div>
@@ -3394,6 +3396,14 @@ async function salvarUsuarioSistema(){
     }
 
     try{
+        console.log({
+    matricula,
+    nome,
+    cpf,
+    regional,
+    polo,
+    base
+});
 
         const payload = {
             matricula,
