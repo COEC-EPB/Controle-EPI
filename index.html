@@ -2272,8 +2272,6 @@ async function abrirHistoricoTroca(
 
         }
 
-        console.log(lista);
-
         conteudo.innerHTML =
         lista.map(item => {
 
@@ -2311,24 +2309,26 @@ async function abrirHistoricoTroca(
 
                 if(fotos.length){
 
-                   fotosHtml = `
-<div style="
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    margin-top:12px;
-">
-${fotos.map(foto => `
-    ${foto}
-        ${foto}
-    </a>
-`).join("")}
-</div>
-`;
+                    fotosHtml = `
+                        <div style="
+                            display:flex;
+                            gap:10px;
+                            flex-wrap:wrap;
+                            margin-top:12px;
+                        ">
+                            ${fotos.map(foto => `
+                                ${foto}
+                                    ${foto}
+                                </a>
+                            `).join("")}
+                        </div>
+                    `;
 
                 }
 
             }catch(e){
+
+                console.error(e);
 
                 fotosHtml = "";
 
@@ -2401,7 +2401,6 @@ ${fotos.map(foto => `
     }
 
 }
-
 function fecharHistoricoTroca(){
 
     const modal =
