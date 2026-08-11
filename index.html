@@ -2223,8 +2223,7 @@ async function abrirHistoricoTroca(
         return;
     }
 
-    titulo.innerText =
-        `Histórico - ${colaborador}`;
+    titulo.innerText = `Histórico - ${colaborador}`;
 
     conteudo.innerHTML = `
         <p style="color:#777;">
@@ -2241,11 +2240,11 @@ async function abrirHistoricoTroca(
             + `?matricula=${encodeURIComponent(matricula)}`
             + `&material=${encodeURIComponent(material)}`;
 
-        const resp =
-            await authFetch(url);
+        const resp = await authFetch(url);
 
-        const dados =
-            await resp.json();
+        const dados = await resp.json();
+
+        console.log("RETORNO HISTÓRICO:", dados);
 
         if (
             !resp.ok ||
@@ -2257,16 +2256,12 @@ async function abrirHistoricoTroca(
             );
         }
 
-        const lista =
-            dados.dados || [];
+        const lista = dados.dados || [];
 
         if (!lista.length) {
 
             conteudo.innerHTML = `
-                <p style="
-                    color:#777;
-                    padding:15px;
-                ">
+                <p style="color:#777;">
                     Nenhuma movimentação encontrada para este material.
                 </p>
             `;
@@ -2274,337 +2269,294 @@ async function abrirHistoricoTroca(
             return;
         }
 
-        conteudo.innerHTML =
-            lista.map(item => {
+        conteudo.innerHTML = lista.map(item => {
 
-                /* ============================
-                   DATA
-                ============================ */
+            /* ============================
+               DATA
+            ============================ */
 
-                const data =
-                    item.data_movimentacao ||
-                    item.criado_em ||
-                    "";
+            const data =
+                item.data_movimentacao ||
+                item.criado_em ||
+                "";
 
-                let dataFormatada = "--";
+            let dataFormatada = "--";
 
-                if (data) {
+            if (data) {
 
-                    const dataObj =
-                        new Date(data);
+                const dataObj = new Date(data);
 
-                    if (!isNaN(dataObj.getTime())) {
+                if (!isNaN(dataObj.getTime())) {
 
-                        dataFormatada =
-                            dataObj.toLocaleDateString(
-                                "pt-BR"
-                            );
-                    }
-                }
-
-
-                /* ============================
-                   MATERIAL
-                ============================ */
-
-                const materialMov =
-                    item.equipamento_novo ||
-                    item.equipamento ||
-                    material ||
-                    "--";
-
-
-                /* ============================
-   FOTOS
-============================ */
-
-let fotos = [];
-
-try {
-
-    let valorFotos = item.fotos;
-
-    if (
-        valorFotos &&
-        valorFotos !== "null" &&
-        valorFotos !== "undefined"
-    ) {
-
-        // Se já for array
-        if (Array.isArray(valorFotos)) {
-
-            fotos = valorFotos;
-
-        }
-
-        // Se vier como string
-        else if (typeof valorFotos === "string") {
-
-            valorFotos = valorFotos.trim();
-
-            // Tenta interpretar JSON
-            try {
-
-                const parsed =
-                    JSON.parse(valorFotos);
-
-                if (Array.isArray(parsed)) {
-
-                    fotos = parsed;
-
-                } else if (parsed) {
-
-                    fotos = [parsed];
-
-                }
-
-            } catch {
-
-                // Não é JSON.
-                // Pode ser uma URL direta.
-
-                if (
-                    valorFotos.startsWith("http://") ||
-                    valorFotos.startsWith("https://")
-                ) {
-
-                    fotos = [valorFotos];
-
+                    dataFormatada =
+                        dataObj.toLocaleDateString("pt-BR");
                 }
             }
-        }
-    }
-
-} catch (erro) {
-
-    console.error(
-        "Erro ao processar fotos:",
-        erro
-    );
-
-    fotos = [];
-}
 
 
-/* ============================
-   NORMALIZA AS FOTOS
-============================ */
+            /* ============================
+               MATERIAL
+            ============================ */
 
-fotos = fotos
-    .map(foto => {
-
-        // Caso venha como objeto
-        if (typeof foto === "object" && foto !== null) {
-
-            return (
-                foto.url ||
-                foto.URL ||
-                foto.link ||
-                foto.src ||
-                ""
-            );
-        }
-
-        return String(foto || "");
-
-    })
-    .map(foto =>
-        foto
-            .trim()
-            .replace(/^["']|["']$/g, "")
-    )
-    .filter(foto =>
-        foto.startsWith("http://") ||
-        foto.startsWith("https://")
-    )
-    .filter(
-        (foto, index, array) =>
-            array.indexOf(foto) === index
-    );
+            const materialMov =
+                item.equipamento_novo ||
+                item.equipamento ||
+                material ||
+                "--";
 
 
-/* ============================
-   HTML DAS FOTOS
-============================ */
+            /* ============================
+               FOTOS
+            ============================ */
 
-let fotosHtml = "";
+            let fotos = [];
 
-if (fotos.length) {
+            if (
+                item.fotos &&
+                item.fotos !== "null" &&
+                item.fotos !== "undefined"
+            ) {
 
-    fotosHtml = `
-        <div style="
-            margin-top:15px;
-        ">
+                try {
 
-            <div style="
-                font-weight:600;
-                margin-bottom:8px;
-            ">
-                Fotos:
-            </div>
+                    if (Array.isArray(item.fotos)) {
 
-            <div style="
-                display:flex;
-                flex-wrap:wrap;
-                gap:10px;
-            ">
+                        fotos = item.fotos;
 
-                ${fotos.map((foto, index) => `
+                    } else if (
+                        typeof item.fotos === "string"
+                    ) {
 
-                    <div style="
-                        width:120px;
-                        height:120px;
-                        border:1px solid #ddd;
-                        border-radius:10px;
-                        overflow:hidden;
-                        background:#fff;
-                        position:relative;
-                    ">
+                        const texto =
+                            item.fotos.trim();
 
-                        <a
-                            href="${foto}"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style="
-                                display:block;
-                                width:100%;
-                                height:100%;
-                            "
-                        >
+                        try {
 
-                            <img
-                                src="${foto}"
-                                alt="Foto ${index + 1}"
-                                style="
-                                    width:100%;
-                                    height:100%;
-                                    object-fit:cover;
-                                    display:block;
-                                "
-                                onerror="
-                                    this.style.display='none';
-                                    this.parentElement.parentElement.innerHTML = `
-                                        <a
-                                            href='${foto}'
-                                            target='_blank'
-                                            rel='noopener noreferrer'
-                                            style='
-                                                width:100%;
-                                                height:100%;
-                                                display:flex;
-                                                align-items:center;
-                                                justify-content:center;
-                                                text-align:center;
-                                                color:#555;
-                                                font-size:13px;
-                                                text-decoration:underline;
-                                                padding:10px;
-                                                box-sizing:border-box;
-                                            '
-                                        >
-                                            Abrir imagem
-                                        </a>
-                                    `;
-                                "
-                            >
+                            const convertido =
+                                JSON.parse(texto);
 
-                        </a>
+                            if (
+                                Array.isArray(convertido)
+                            ) {
 
-                    </div>
+                                fotos = convertido;
 
-                `).join("")}
+                            } else if (convertido) {
 
-            </div>
+                                fotos = [convertido];
+                            }
 
-        </div>
-    `;
+                        } catch {
 
-}
+                            /*
+                             * Caso seja uma URL
+                             * diretamente
+                             */
 
+                            if (
+                                texto.startsWith("http://") ||
+                                texto.startsWith("https://")
+                            ) {
 
-                /* ============================
-                   CARD DO HISTÓRICO
-                ============================ */
-
-                return `
-                    <div style="
-                        border-left:5px solid #0097CE;
-                        padding:14px 15px;
-                        margin-bottom:12px;
-                        background:#F8FAFC;
-                        border-radius:12px;
-                    ">
-
-                        <strong style="
-                            font-size:16px;
-                            color:#111;
-                        ">
-                            ${escaparHTMLLocal(
-                                item.operacao ||
-                                "Movimentação"
-                            )}
-                        </strong>
-
-                        <br>
-
-                        <small style="
-                            color:#777;
-                        ">
-                            ${dataFormatada}
-                        </small>
-
-                        <p style="
-                            margin-top:10px;
-                            margin-bottom:0;
-                            line-height:1.6;
-                        ">
-
-                            <b>Material:</b>
-                            ${escaparHTMLLocal(
-                                materialMov
-                            )}
-
-                            <br>
-
-                            <b>Quantidade:</b>
-                            ${Number(
-                                item.quantidade || 0
-                            )}
-
-                            <br>
-
-                            <b>Responsável:</b>
-                            ${escaparHTMLLocal(
-                                item.responsavel ||
-                                item.criado_por ||
-                                "--"
-                            )}
-
-                        </p>
-
-                        ${
-                            item.observacao
-                            ? `
-                                <p style="
-                                    margin-top:8px;
-                                    margin-bottom:0;
-                                ">
-                                    <b>Obs.:</b>
-                                    ${escaparHTMLLocal(
-                                        item.observacao
-                                    )}
-                                </p>
-                            `
-                            : ""
+                                fotos = [texto];
+                            }
                         }
+                    }
 
-                        ${fotosHtml}
+                } catch (erro) {
+
+                    console.error(
+                        "Erro ao processar fotos:",
+                        erro
+                    );
+
+                    fotos = [];
+                }
+            }
+
+
+            /* ============================
+               NORMALIZA FOTOS
+            ============================ */
+
+            fotos = fotos
+                .map(foto => {
+
+                    if (
+                        typeof foto === "object" &&
+                        foto !== null
+                    ) {
+
+                        return (
+                            foto.url ||
+                            foto.URL ||
+                            foto.link ||
+                            foto.src ||
+                            ""
+                        );
+                    }
+
+                    return String(foto || "");
+                })
+                .map(foto =>
+                    foto
+                        .trim()
+                        .replace(/^["']|["']$/g, "")
+                )
+                .filter(foto =>
+                    foto.startsWith("http://") ||
+                    foto.startsWith("https://")
+                )
+                .filter(
+                    (foto, index, array) =>
+                        array.indexOf(foto) === index
+                );
+
+
+            /* ============================
+               HTML DAS FOTOS
+            ============================ */
+
+            let fotosHtml = "";
+
+            if (fotos.length) {
+
+                fotosHtml = `
+                    <div style="
+                        margin-top:15px;
+                    ">
+
+                        <div style="
+                            font-weight:600;
+                            margin-bottom:8px;
+                        ">
+                            Fotos:
+                        </div>
+
+                        <div style="
+                            display:flex;
+                            flex-wrap:wrap;
+                            gap:10px;
+                        ">
+
+                            ${fotos.map((foto, index) => `
+                                
+                                <a
+                                    href="${foto}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style="
+                                        display:block;
+                                        width:120px;
+                                        height:120px;
+                                        border:1px solid #ddd;
+                                        border-radius:10px;
+                                        overflow:hidden;
+                                        background:#fff;
+                                    "
+                                    title="Abrir imagem"
+                                >
+
+                                    <img
+                                        src="${foto}"
+                                        alt="Foto ${index + 1}"
+                                        style="
+                                            width:100%;
+                                            height:100%;
+                                            object-fit:cover;
+                                            display:block;
+                                        "
+                                    >
+
+                                </a>
+
+                            `).join("")}
+
+                        </div>
 
                     </div>
                 `;
+            }
 
-            }).join("");
 
+            /* ============================
+               CARD
+            ============================ */
+
+            return `
+                <div style="
+                    border-left:5px solid #0097CE;
+                    padding:14px 15px;
+                    margin-bottom:12px;
+                    background:#F8FAFC;
+                    border-radius:12px;
+                ">
+
+                    <strong style="
+                        font-size:16px;
+                        color:#111;
+                    ">
+                        ${escaparHTMLLocal(
+                            item.operacao ||
+                            "Movimentação"
+                        )}
+                    </strong>
+
+                    <br>
+
+                    <small style="
+                        color:#777;
+                    ">
+                        ${dataFormatada}
+                    </small>
+
+                    <p style="
+                        margin-top:10px;
+                        margin-bottom:0;
+                        line-height:1.6;
+                    ">
+
+                        <b>Material:</b>
+                        ${escaparHTMLLocal(materialMov)}
+
+                        <br>
+
+                        <b>Quantidade:</b>
+                        ${Number(item.quantidade || 0)}
+
+                        <br>
+
+                        <b>Responsável:</b>
+                        ${escaparHTMLLocal(
+                            item.responsavel ||
+                            item.criado_por ||
+                            "--"
+                        )}
+
+                    </p>
+
+                    ${
+                        item.observacao
+                        ? `
+                            <p style="
+                                margin-top:8px;
+                                margin-bottom:0;
+                            ">
+                                <b>Obs.:</b>
+                                ${escaparHTMLLocal(
+                                    item.observacao
+                                )}
+                            </p>
+                        `
+                        : ""
+                    }
+
+                    ${fotosHtml}
+
+                </div>
+            `;
+
+        }).join("");
 
     } catch (e) {
 
