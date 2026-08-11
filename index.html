@@ -2315,192 +2315,211 @@ async function abrirHistoricoTroca(
 
 
                 /* ============================
-                   FOTOS
-                ============================ */
+   FOTOS
+============================ */
 
-                let fotos = [];
+let fotos = [];
 
-                try {
+try {
 
-                    if (
-                        item.fotos &&
-                        item.fotos !== "null" &&
-                        item.fotos !== "undefined"
-                    ) {
+    let valorFotos = item.fotos;
 
-                        /*
-                         * Caso fotos já seja um array
-                         */
-                        if (Array.isArray(item.fotos)) {
+    if (
+        valorFotos &&
+        valorFotos !== "null" &&
+        valorFotos !== "undefined"
+    ) {
 
-                            fotos = item.fotos;
+        // Se já for array
+        if (Array.isArray(valorFotos)) {
 
-                        }
+            fotos = valorFotos;
 
-                        /*
-                         * Caso venha como JSON string
-                         */
-                        else if (
-                            typeof item.fotos === "string"
-                        ) {
+        }
 
-                            const valor =
-                                JSON.parse(item.fotos);
+        // Se vier como string
+        else if (typeof valorFotos === "string") {
 
-                            if (Array.isArray(valor)) {
+            valorFotos = valorFotos.trim();
 
-                                fotos = valor;
+            // Tenta interpretar JSON
+            try {
 
-                            } else if (valor) {
+                const parsed =
+                    JSON.parse(valorFotos);
 
-                                fotos = [valor];
+                if (Array.isArray(parsed)) {
 
-                            }
-                        }
-                    }
+                    fotos = parsed;
 
-                } catch (erroFotos) {
+                } else if (parsed) {
 
-                    console.warn(
-                        "Erro ao interpretar fotos:",
-                        erroFotos
-                    );
+                    fotos = [parsed];
 
-                    /*
-                     * Se não for JSON, mas for uma URL,
-                     * tenta usar diretamente.
-                     */
-                    if (
-                        typeof item.fotos === "string" &&
-                        item.fotos.startsWith("http")
-                    ) {
-
-                        fotos = [item.fotos];
-
-                    } else {
-
-                        fotos = [];
-                    }
                 }
 
+            } catch {
 
-                /* ============================
-                   LIMPA E REMOVE DUPLICADAS
-                ============================ */
+                // Não é JSON.
+                // Pode ser uma URL direta.
 
-                fotos = fotos
-                    .filter(foto =>
-                        typeof foto === "string" &&
-                        foto.trim() !== ""
-                    )
-                    .map(foto => foto.trim())
-                    .filter(
-                        (foto, index, array) =>
-                            array.indexOf(foto) === index
-                    );
+                if (
+                    valorFotos.startsWith("http://") ||
+                    valorFotos.startsWith("https://")
+                ) {
 
+                    fotos = [valorFotos];
 
-                /* ============================
-                   HTML DAS FOTOS
-                ============================ */
+                }
+            }
+        }
+    }
 
-                let fotosHtml = "";
+} catch (erro) {
 
-                if (fotos.length) {
+    console.error(
+        "Erro ao processar fotos:",
+        erro
+    );
 
-                    fotosHtml = `
-                        <div style="
-                            margin-top:15px;
-                        ">
-
-                            <div style="
-                                font-weight:600;
-                                margin-bottom:8px;
-                            ">
-                                Fotos:
-                            </div>
-
-                            <div style="
-                                display:flex;
-                                gap:10px;
-                                flex-wrap:wrap;
-                            ">
-
-                                ${fotos.map(foto => {
-
-                                    /*
-                                     * Verifica se é uma URL válida
-                                     */
-                                    let urlFoto = "";
-
-                                    try {
-
-                                        const urlObj =
-                                            new URL(foto);
-
-                                        if (
-                                            urlObj.protocol === "http:" ||
-                                            urlObj.protocol === "https:"
-                                        ) {
-
-                                            urlFoto =
-                                                urlObj.href;
-                                        }
-
-                                    } catch (e) {
-
-                                        return "";
-                                    }
+    fotos = [];
+}
 
 
-                                    if (!urlFoto) {
-                                        return "";
-                                    }
+/* ============================
+   NORMALIZA AS FOTOS
+============================ */
+
+fotos = fotos
+    .map(foto => {
+
+        // Caso venha como objeto
+        if (typeof foto === "object" && foto !== null) {
+
+            return (
+                foto.url ||
+                foto.URL ||
+                foto.link ||
+                foto.src ||
+                ""
+            );
+        }
+
+        return String(foto || "");
+
+    })
+    .map(foto =>
+        foto
+            .trim()
+            .replace(/^["']|["']$/g, "")
+    )
+    .filter(foto =>
+        foto.startsWith("http://") ||
+        foto.startsWith("https://")
+    )
+    .filter(
+        (foto, index, array) =>
+            array.indexOf(foto) === index
+    );
 
 
-                                    return `
+/* ============================
+   HTML DAS FOTOS
+============================ */
+
+let fotosHtml = "";
+
+if (fotos.length) {
+
+    fotosHtml = `
+        <div style="
+            margin-top:15px;
+        ">
+
+            <div style="
+                font-weight:600;
+                margin-bottom:8px;
+            ">
+                Fotos:
+            </div>
+
+            <div style="
+                display:flex;
+                flex-wrap:wrap;
+                gap:10px;
+            ">
+
+                ${fotos.map((foto, index) => `
+
+                    <div style="
+                        width:120px;
+                        height:120px;
+                        border:1px solid #ddd;
+                        border-radius:10px;
+                        overflow:hidden;
+                        background:#fff;
+                        position:relative;
+                    ">
+
+                        <a
+                            href="${foto}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style="
+                                display:block;
+                                width:100%;
+                                height:100%;
+                            "
+                        >
+
+                            <img
+                                src="${foto}"
+                                alt="Foto ${index + 1}"
+                                style="
+                                    width:100%;
+                                    height:100%;
+                                    object-fit:cover;
+                                    display:block;
+                                "
+                                onerror="
+                                    this.style.display='none';
+                                    this.parentElement.parentElement.innerHTML = `
                                         <a
-                                            href="${urlFoto}"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            style="
-                                                display:block;
-                                                width:120px;
-                                                height:120px;
-                                                border-radius:10px;
-                                                overflow:hidden;
-                                                border:1px solid #ddd;
-                                                background:#fff;
-                                                cursor:pointer;
-                                            "
-                                            title="Clique para visualizar a foto"
+                                            href='${foto}'
+                                            target='_blank'
+                                            rel='noopener noreferrer'
+                                            style='
+                                                width:100%;
+                                                height:100%;
+                                                display:flex;
+                                                align-items:center;
+                                                justify-content:center;
+                                                text-align:center;
+                                                color:#555;
+                                                font-size:13px;
+                                                text-decoration:underline;
+                                                padding:10px;
+                                                box-sizing:border-box;
+                                            '
                                         >
-
-                                            <img
-                                                src="${urlFoto}"
-                                                alt="Foto da movimentação"
-                                                style="
-                                                    width:100%;
-                                                    height:100%;
-                                                    object-fit:cover;
-                                                    display:block;
-                                                "
-                                                onerror="
-                                                    this.style.display='none';
-                                                    this.parentElement.innerHTML='<span style=&quot;display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:12px;color:#777;text-align:center;padding:5px;&quot;>Imagem indisponível</span>';
-                                                "
-                                            >
-
+                                            Abrir imagem
                                         </a>
                                     `;
+                                "
+                            >
 
-                                }).join("")}
+                        </a>
 
-                            </div>
+                    </div>
 
-                        </div>
-                    `;
-                }
+                `).join("")}
+
+            </div>
+
+        </div>
+    `;
+
+}
 
 
                 /* ============================
