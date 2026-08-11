@@ -2311,28 +2311,20 @@ async function abrirHistoricoTroca(
 
                 if(fotos.length){
 
-                    fotosHtml = `
-                        <div style="
-                            display:flex;
-                            gap:10px;
-                            flex-wrap:wrap;
-                            margin-top:12px;
-                        ">
-                            ${fotos.map(foto => `
-                                ${foto}"
-                                    style="
-                                        width:140px;
-                                        height:140px;
-                                        object-fit:cover;
-                                        border-radius:12px;
-                                        border:2px solid #ddd;
-                                        cursor:pointer;
-                                        background:#f1f5f9;
-                                    "
-                                >
-                            `).join("")}
-                        </div>
-                    `;
+                   fotosHtml = `
+    <div style="
+        display:flex;
+        gap:10px;
+        flex-wrap:wrap;
+        margin-top:12px;
+    ">
+        ${fotos.map(foto => `
+            ${foto}
+                ${foto}
+            </a>
+        `).join("")}
+    </div>
+`;
 
                 }
 
