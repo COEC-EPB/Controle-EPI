@@ -2328,7 +2328,48 @@ async function abrirHistoricoTroca(
                         ? `<p><b>Obs.:</b> ${escaparHTMLLocal(item.observacao)}</p>`
                         : ""
                     }
+                      ${
+    (() => {
 
+        try{
+
+            const fotos =
+            JSON.parse(item.fotos || "[]");
+
+            if(!fotos.length){
+                return "";
+            }
+
+            return `
+                <div style="
+                    display:flex;
+                    gap:10px;
+                    flex-wrap:wrap;
+                    margin-top:10px;
+                ">
+                    ${fotos.map(foto => `
+                        ${foto}"
+                            style="
+                                width:120px;
+                                height:120px;
+                                object-fit:cover;
+                                border-radius:10px;
+                                border:2px solid #ddd;
+                                cursor:pointer;
+                            "
+                        >
+                    `).join("")}
+                </div>
+            `;
+
+        }catch(e){
+
+            return "";
+
+        }
+
+    })()
+}      
                 </div>
             `;
 
