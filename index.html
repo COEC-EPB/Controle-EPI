@@ -2275,106 +2275,107 @@ async function abrirHistoricoTroca(
         console.log(lista);
 
         conteudo.innerHTML =
-        lista.map(item => {
+lista.map(item => {
 
-            const data =
-            item.data_movimentacao ||
-            item.criado_em ||
-            "";
+    const data =
+    item.data_movimentacao ||
+    item.criado_em ||
+    "";
 
-            const dataFormatada =
-            data
-            ? new Date(data).toLocaleDateString("pt-BR")
-            : "--";
+    const dataFormatada =
+    data
+    ? new Date(data).toLocaleDateString("pt-BR")
+    : "--";
 
-            const materialMov =
-            item.equipamento_novo ||
-            item.equipamento ||
-            "";
+    const materialMov =
+    item.equipamento_novo ||
+    item.equipamento ||
+    "";
 
-            return `
-                <div style="
-                    border-left:5px solid #0097CE;
-                    padding:12px 15px;
-                    margin-bottom:12px;
-                    background:#F8FAFC;
-                    border-radius:12px;
-                ">
+    let fotosHtml = "";
 
-                    <strong>
-                        ${escaparHTMLLocal(item.operacao || "Movimentação")}
-                    </strong>
+    try{
 
-                    <br>
+        const fotos =
+        JSON.parse(item.fotos || "[]");
 
-                    <small style="color:#777;">
-                        ${dataFormatada}
-                    </small>
+        if(fotos.length){
 
-                    <p style="margin-top:8px;">
-                        <b>Material:</b>
-                        ${escaparHTMLLocal(materialMov)}
-                        <br>
-
-                        <b>Quantidade:</b>
-                        ${Number(item.quantidade || 0)}
-                        <br>
-
-                        <b>Responsável:</b>
-                        ${escaparHTMLLocal(item.responsavel || item.criado_por || "")}
-                    </p>
-
-                    ${
-                        item.observacao
-                        ? `<p><b>Obs.:</b> ${escaparHTMLLocal(item.observacao)}</p>`
-                        : ""
-                    }
-                      ${
-    (() => {
-
-        try{
-
-            const fotos =
-            JSON.parse(item.fotos || "[]");
-
-            if(!fotos.length){
-                return "";
-            }
-
-            return `
+            fotosHtml = `
                 <div style="
                     display:flex;
                     gap:10px;
                     flex-wrap:wrap;
-                    margin-top:10px;
+                    margin-top:12px;
                 ">
                     ${fotos.map(foto => `
                         ${foto}"
                             style="
-                                width:120px;
-                                height:120px;
+                                width:140px;
+                                height:140px;
                                 object-fit:cover;
-                                border-radius:10px;
+                                border-radius:12px;
                                 border:2px solid #ddd;
                                 cursor:pointer;
+                                background:#f1f5f9;
                             "
                         >
                     `).join("")}
                 </div>
             `;
 
-        }catch(e){
-
-            return "";
-
         }
 
-    })()
-}      
-                </div>
-            `;
+    }catch(e){
 
-        }).join("");
+        fotosHtml = "";
+
+    }
+
+    return `
+        <div style="
+            border-left:5px solid #0097CE;
+            padding:12px 15px;
+            margin-bottom:12px;
+            background:#F8FAFC;
+            border-radius:12px;
+        ">
+
+            <strong>
+                ${escaparHTMLLocal(item.operacao || "Movimentação")}
+            </strong>
+
+            <br>
+
+            <small style="color:#777;">
+                ${dataFormatada}
+            </small>
+
+            <p style="margin-top:8px;">
+                <b>Material:</b>
+                ${escaparHTMLLocal(materialMov)}
+                <br>
+
+                <b>Quantidade:</b>
+                ${Number(item.quantidade || 0)}
+                <br>
+
+                <b>Responsável:</b>
+                ${escaparHTMLLocal(item.responsavel || item.criado_por || "")}
+            </p>
+
+            ${
+                item.observacao
+                ? `<p><b>Obs.:</b> ${escaparHTMLLocal(item.observacao)}</p>`
+                : ""
+            }
+
+            ${fotosHtml}
+
+        </div>
+    `;
+
+}).join("");
 
     }catch(e){
 
