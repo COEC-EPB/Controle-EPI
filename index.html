@@ -726,6 +726,18 @@ MELHORIAS DASHBOARD OPERACIONAL
     }
 
 }
+    .alerta-card{
+    transition:.2s;
+}
+
+.alerta-card:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+    0 8px 20px rgba(0,0,0,.12);
+
+}
 
 </style>
 
@@ -2156,32 +2168,50 @@ async function carregarAlertasTroca(){
         }
 
         container.innerHTML =
-        lista.slice(0,6).map(item => {
+lista.slice(0,6).map(item => {
 
-            let classe = "laranja";
+    let classe = "laranja";
 
-            if(item.nivel === "critico"){
-                classe = "vermelho";
-            }
+    if(item.nivel === "critico"){
+        classe = "vermelho";
+    }
 
-            return `
-                <div class="alerta-card ${classe}">
+    return `
 
-                    <strong>
-                        ${escaparHTMLLocal(item.colaborador)}
-                    </strong>
+        <div
+            class="alerta-card ${classe}"
+            style="cursor:pointer"
+            onclick="abrirHistoricoTroca(
+                '${escaparAtributo(item.matricula)}',
+                '${escaparAtributo(item.material)}',
+                '${escaparAtributo(item.colaborador)}'
+            )"
+        >
 
-                    <small>
-                        ${escaparHTMLLocal(item.material)}
-                        em
-                        ${Number(item.dias_entre_trocas || 0)}
-                        dia(s)
-                    </small>
+            <strong>
+                ${escaparHTMLLocal(item.colaborador)}
+            </strong>
 
-                </div>
-            `;
+            <small>
+    ${escaparHTMLLocal(item.material)}
+    <br>
+    Troca em
+    <b>${Number(item.dias_entre_trocas || 0)} dia(s)</b>
+</small>
 
-        }).join("");
+            <div style="
+                margin-top:8px;
+                font-size:12px;
+                color:#666;
+            ">
+                👆 Clique para visualizar o histórico
+            </div>
+
+        </div>
+
+    `;
+
+}).join("");
 
     }catch(e){
 
