@@ -3041,16 +3041,16 @@ function fecharConfiguracoes(){
 
 }
 
-function atualizarBasesUsuario(){
+function atualizarBasesUsuario(baseSelecionada = ""){
 
     const polo =
-        document.getElementById("usuarioPolo").value;
+    document.getElementById("usuarioPolo").value;
 
     const selectBase =
-        document.getElementById("usuarioBase");
+    document.getElementById("usuarioBase");
 
     selectBase.innerHTML =
-        `<option value="">Selecione</option>`;
+    `<option value="">Selecione</option>`;
 
     if(!BASES_POR_POLO[polo]){
         return;
@@ -3058,31 +3058,40 @@ function atualizarBasesUsuario(){
 
     BASES_POR_POLO[polo].forEach(base => {
 
-        selectBase.innerHTML += `
-            <option value="${base}">
-                ${base}
-            </option>
-        `;
+        const option =
+        document.createElement("option");
+
+        option.value = base;
+        option.textContent = base;
+
+        selectBase.appendChild(option);
 
     });
+
+    if(baseSelecionada){
+        selectBase.value = baseSelecionada;
+    }
 
 }
 
 function abrirModalUsuarioSistema(){
 
     document.getElementById("tituloModalUsuario").innerText =
-        "👤 Novo usuário";
+    "👤 Novo usuário";
 
     document.getElementById("usuarioModo").value =
-        "novo";
+    "novo";
 
     document.getElementById("usuarioMatricula").disabled =
-        false;
+    false;
 
     limparFormularioUsuarioSistema();
 
-    document.getElementById("modalUsuarioSistema").style.display =
-        "flex";
+    atualizarBasesUsuario();
+
+    document.getElementById(
+        "modalUsuarioSistema"
+    ).style.display = "flex";
 
 }
 
@@ -3296,9 +3305,9 @@ function renderUsuariosSistema(){
 function editarUsuarioSistema(matricula){
 
     const usuario =
-        usuariosSistemaCache.find(
-            item => String(item.matricula) === String(matricula)
-        );
+    usuariosSistemaCache.find(
+        item => String(item.matricula) === String(matricula)
+    );
 
     if(!usuario){
         alert("Usuário não encontrado.");
@@ -3306,48 +3315,50 @@ function editarUsuarioSistema(matricula){
     }
 
     document.getElementById("tituloModalUsuario").innerText =
-        "✏️ Editar usuário";
+    "✏️ Editar usuário";
 
     document.getElementById("usuarioModo").value =
-        "editar";
+    "editar";
 
     document.getElementById("usuarioMatricula").value =
-        usuario.matricula || "";
+    usuario.matricula || "";
 
     document.getElementById("usuarioMatricula").disabled =
-        true;
+    true;
 
     document.getElementById("usuarioNome").value =
-        usuario.nome || "";
+    usuario.nome || "";
 
     document.getElementById("usuarioCPF").value =
-        usuario.cpf || "";
+    usuario.cpf || "";
 
     document.getElementById("usuarioSenha").value =
-        "";
+    "";
 
     document.getElementById("usuarioRegional").value =
-        usuario.regional || "";
+    usuario.regional || "";
 
+    document.getElementById("usuarioPolo").value =
+    usuario.polo || "";
 
-    document.getElementById("usuarioBase").value =
-        usuario.base || "";
+    atualizarBasesUsuario(
+        usuario.base || ""
+    );
 
     document.getElementById("usuarioRole").value =
-        usuario.role === "admin"
-        ? "admin"
-        : "user";
+    usuario.role === "admin"
+    ? "admin"
+    : "user";
 
     document.getElementById("usuarioAtivo").value =
-        Number(usuario.ativo) === 1
-        ? "1"
-        : "0";
+    Number(usuario.ativo) === 1
+    ? "1"
+    : "0";
 
     document.getElementById("modalUsuarioSistema").style.display =
-        "flex";
+    "flex";
 
 }
-
 async function salvarUsuarioSistema(){
 
     const modo =
