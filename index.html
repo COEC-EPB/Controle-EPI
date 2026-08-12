@@ -566,6 +566,166 @@ RODAPÉ DASHBOARD
     border-radius:20px;
     font-size:12px;
 }
+    /* ===================================
+MELHORIAS DASHBOARD OPERACIONAL
+=================================== */
+
+.card-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
+
+.kpi-tag{
+    font-size:11px;
+    font-weight:800;
+    padding:5px 9px;
+    border-radius:20px;
+}
+
+.kpi-tag.azul{
+    background:#E0F4FF;
+    color:#0077B6;
+}
+
+.kpi-tag.laranja{
+    background:#FFF1E7;
+    color:#C2410C;
+}
+
+.kpi-tag.verde{
+    background:#DCFCE7;
+    color:#166534;
+}
+
+.kpi-tag.vermelho{
+    background:#FEE2E2;
+    color:#991B1B;
+}
+
+.grafico{
+    min-height:380px;
+}
+
+.grafico-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    margin-bottom:15px;
+}
+
+.grafico-header h3{
+    margin-bottom:4px;
+}
+
+.grafico-header small{
+    color:#777;
+}
+
+.grafico-canvas{
+    position:relative;
+    height:280px;
+}
+
+.box-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    margin-bottom:15px;
+}
+
+.box-header small{
+    color:#777;
+}
+
+.mov-card{
+    display:flex;
+    gap:12px;
+    padding:12px 0;
+    border-bottom:1px solid #eee;
+}
+
+.mov-icone{
+    width:42px;
+    height:42px;
+    border-radius:12px;
+    background:#E0F4FF;
+    color:#0097CE;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+    flex-shrink:0;
+}
+
+.mov-info strong{
+    display:block;
+    color:#111827;
+    margin-bottom:3px;
+}
+
+.mov-info p{
+    color:#555;
+    font-size:14px;
+    margin:0;
+}
+
+.mov-info small{
+    color:#888;
+}
+
+.alerta-card{
+    padding:12px;
+    border-radius:14px;
+    margin-bottom:10px;
+    background:#F8FAFC;
+    border-left:5px solid #0097CE;
+}
+
+.alerta-card.vermelho{
+    border-left-color:#DC3545;
+    background:#FFF5F5;
+}
+
+.alerta-card.laranja{
+    border-left-color:#F36F21;
+    background:#FFF7ED;
+}
+
+.alerta-card.verde{
+    border-left-color:#28A745;
+    background:#F0FDF4;
+}
+
+.alerta-card strong{
+    display:block;
+    margin-bottom:4px;
+}
+
+.alerta-card small{
+    color:#666;
+}
+
+@media(max-width:900px){
+
+    .cards{
+        grid-template-columns:1fr;
+    }
+
+    .graficos{
+        grid-template-columns:1fr;
+    }
+
+    .inferior{
+        grid-template-columns:1fr;
+    }
+
+    .grafico-canvas{
+        height:240px;
+    }
+
+}
 
 </style>
 
@@ -722,63 +882,59 @@ onclick="window.location.href='https://coec-epb.github.io/colaboradores_material
 
     <section class="cards">
 
-        <div class="card equipamentos">
-
+    <div class="card equipamentos">
+        <div class="card-top">
             <h3>🛡 Equipamentos</h3>
-
-            <h2 id="totalEquipamentos">
-                0
-            </h2>
-
-            <small>
-                +15 este mês
-            </small>
-
+            <span class="kpi-tag azul">Estoque</span>
         </div>
 
-        <div class="card inventarios">
+        <h2 id="totalEquipamentos">0</h2>
 
+        <small>
+            Total de materiais cadastrados
+        </small>
+    </div>
+
+    <div class="card inventarios">
+        <div class="card-top">
             <h3>📋 Inventários</h3>
-
-            <h2 id="totalInventarios">
-                0
-            </h2>
-
-            <small>
-                2 pendentes
-            </small>
-
+            <span class="kpi-tag laranja">Controle</span>
         </div>
 
-        <div class="card lap">
+        <h2 id="totalInventarios">0</h2>
 
-            <h3>🦺 LAP</h3>
+        <small>
+            Inventários realizados
+        </small>
+    </div>
 
-            <h2 id="totalLap">
-                0
-            </h2>
-
-            <small>
-                4 vencendo
-            </small>
-
+    <div class="card lap">
+        <div class="card-top">
+            <h3>🦺 Movimentações</h3>
+            <span class="kpi-tag verde">Operação</span>
         </div>
 
-        <div class="card divergencias">
+        <h2 id="totalMovimentacoes">0</h2>
 
-            <h3>⚠ Divergências</h3>
+        <small>
+            Entregas, trocas e transferências
+        </small>
+    </div>
 
-            <h2 id="totalDivergencias">
-                0
-            </h2>
-
-            <small>
-                Necessitam atenção
-            </small>
-
+    <div class="card divergencias">
+        <div class="card-top">
+            <h3>🚨 Trocas &lt; 30 dias</h3>
+            <span class="kpi-tag vermelho">Atenção</span>
         </div>
 
-    </section>
+        <h2 id="totalTrocasRapidas">0</h2>
+
+        <small>
+            Possíveis reincidências
+        </small>
+    </div>
+
+</section>
 
     <section class="box" id="painelConfiguracoes" style="display:none; margin-top:25px;">
 
@@ -970,58 +1126,63 @@ onclick="window.location.href='https://coec-epb.github.io/colaboradores_material
 
     <section class="graficos">
 
-        <div class="grafico">
+    <div class="grafico">
+        <div class="grafico-header">
+            <div>
+                <h3>Materiais por Categoria</h3>
+                <small>Distribuição de EPI, EPC e Ferramental</small>
+            </div>
+        </div>
 
-            <h3>
-                Equipamentos por Categoria
-            </h3>
-
+        <div class="grafico-canvas">
             <canvas id="graficoCategoria"></canvas>
+        </div>
+    </div>
 
+    <div class="grafico">
+        <div class="grafico-header">
+            <div>
+                <h3>Movimentações por Base</h3>
+                <small>Volume operacional por localidade</small>
+            </div>
         </div>
 
-        <div class="grafico">
-
-            <h3>
-                Inventários por Polo
-            </h3>
-
-            <canvas id="graficoPolo"></canvas>
-
+        <div class="grafico-canvas">
+            <canvas id="graficoBase"></canvas>
         </div>
+    </div>
 
-    </section>
+</section>
 
     <section class="inferior">
 
-        <div class="box">
-
-            <h3>
-                Últimas Movimentações
-            </h3>
-
-            <div id="ultimasMovimentacoes">
+    <div class="box">
+        <div class="box-header">
+            <div>
+                <h3>📌 Últimas Movimentações</h3>
+                <small>Registros recentes do sistema</small>
             </div>
-
         </div>
 
-        <div class="box">
+        <div id="ultimasMovimentacoes">
+            Carregando movimentações...
+        </div>
+    </div>
 
-            <h3>
-                🚨 Trocas em menos de 30 dias
-            </h3>
-            
-            <table width="100%">
-            
-                <tbody id="alertasTroca">
-            
-                </tbody>
-            
-            </table>
-
+    <div class="box">
+        <div class="box-header">
+            <div>
+                <h3>🚨 Alertas Operacionais</h3>
+                <small>Itens que precisam de acompanhamento</small>
+            </div>
         </div>
 
-    </section>
+        <div id="painelAlertasOperacionais">
+            Carregando alertas...
+        </div>
+    </div>
+
+</section>
     <div
 class="modal-overlay"
 id="modalEntradaMaterial">
@@ -1177,7 +1338,7 @@ id="modalHistoricoTroca">
     </div>
 
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://coec-epb.github.io/login-Material/auth.js"></script>
 
 <script>
@@ -1571,83 +1732,83 @@ function preencherSelectLista(
 
 }
 
-/* ======================================================
-   DASHBOARD
-====================================================== */
+let chartCategoria = null;
+let chartBase = null;
+
+function numero(valor){
+
+    return Number(valor || 0)
+    .toLocaleString("pt-BR");
+
+}
+
+function dataBR(valor){
+
+    if(!valor){
+        return "--";
+    }
+
+    try{
+
+        return new Date(valor)
+        .toLocaleDateString("pt-BR");
+
+    }catch(e){
+
+        return valor;
+
+    }
+
+}
 
 async function carregarDashboard(){
 
     try{
 
-        if(
-            typeof API === "undefined" ||
-            typeof authFetch !== "function"
-        ){
-            console.error(
-                "API ou authFetch não encontrado. Verifique o auth.js."
-            );
-            return;
-        }
-
         const resp =
-        await authFetch(
-            `${API}/dashboard`
-        );
+        await authFetch(`${API}/dashboard`);
 
-        const textoResposta =
-        await resp.text();
+        const json =
+        await resp.json();
 
-        let dados = {};
-
-        try{
-
-            dados =
-            JSON.parse(textoResposta);
-
-        }catch(e){
-
-            console.error(
-                "Resposta do dashboard não é JSON:",
-                textoResposta
+        if(!resp.ok || json.sucesso === false){
+            throw new Error(
+                json.mensagem ||
+                "Erro ao carregar dashboard."
             );
-
-            return;
-
-        }
-
-        if(!resp.ok){
-
-            console.error(
-                "Erro API dashboard:",
-                dados
-            );
-
-            return;
-
         }
 
         const d =
-        dados.dados ||
-        dados;
+        json.dados || json;
 
         texto(
             "totalEquipamentos",
-            formatarNumero(d.equipamentos)
+            numero(
+                d.equipamentos ||
+                d.entrada_material ||
+                0
+            )
         );
 
         texto(
             "totalInventarios",
-            formatarNumero(d.inventarios)
+            numero(
+                d.inventarios || 0
+            )
         );
 
         texto(
-            "totalLap",
-            formatarNumero(d.lap)
+            "totalMovimentacoes",
+            numero(
+                d.movimentacoes || 0
+            )
         );
 
         texto(
-            "totalDivergencias",
-            formatarNumero(d.divergencias)
+            "totalTrocasRapidas",
+            numero(
+                d.trocas_rapidas || 0
+            )
         );
 
     }catch(e){
@@ -1661,107 +1822,33 @@ async function carregarDashboard(){
 
 }
 
-/* ======================================================
-   ESTATÍSTICAS E GRÁFICOS
-====================================================== */
-
-let chartCategoria = null;
-let chartPolo = null;
-
 async function carregarEstatisticas(){
 
     try{
 
-        if(
-            typeof API === "undefined" ||
-            typeof authFetch !== "function"
-        ){
-            return;
-        }
-
         const resp =
-        await authFetch(
-            `${API}/estatisticas`
-        );
+        await authFetch(`${API}/estatisticas`);
 
-        const textoResposta =
-        await resp.text();
+        const json =
+        await resp.json();
 
-        let dados = {};
-
-        try{
-
-            dados =
-            JSON.parse(textoResposta);
-
-        }catch(e){
-
-            console.warn(
-                "Resposta de estatísticas não é JSON:",
-                textoResposta
+        if(!resp.ok || json.sucesso === false){
+            throw new Error(
+                json.mensagem ||
+                "Erro ao carregar estatísticas."
             );
-
-            desenharGraficosVazios();
-
-            return;
-
-        }
-
-        if(!resp.ok){
-
-            console.warn(
-                "Erro ao buscar estatísticas:",
-                dados
-            );
-
-            desenharGraficosVazios();
-
-            return;
-
         }
 
         const d =
-        dados.dados ||
-        dados;
-
-        const categorias =
-        d.categorias ||
-        [];
-
-        const polos =
-        d.polos ||
-        d.regionais ||
-        [];
+        json.dados || {};
 
         desenharGraficoCategoria(
-            categorias
+            d.categorias || []
         );
 
-        desenharGraficoPolo(
-            polos
+        desenharGraficoBase(
+            d.bases || []
         );
-
-        if(
-            d.regionais &&
-            d.regionais.length
-        ){
-            preencherSelectLista(
-                "regional",
-                d.regionais.map(r => r.regional || r.valor || r.nome),
-                "Regional"
-            );
-        }
-
-        if(
-            d.polos &&
-            d.polos.length
-        ){
-            preencherSelectLista(
-                "polo",
-                d.polos.map(r => r.polo || r.valor || r.nome),
-                "Polo"
-            );
-        }
 
     }catch(e){
 
@@ -1770,11 +1857,356 @@ async function carregarEstatisticas(){
             e
         );
 
-        desenharGraficosVazios();
+        desenharGraficoCategoria([]);
+        desenharGraficoBase([]);
 
     }
 
 }
+
+function desenharGraficoCategoria(lista){
+
+    const canvas =
+    document.getElementById("graficoCategoria");
+
+    if(!canvas || typeof Chart === "undefined"){
+        return;
+    }
+
+    const labels =
+    lista.length
+    ? lista.map(item =>
+        item.categoria ||
+        item.valor ||
+        "Sem categoria"
+    )
+    : ["Sem dados"];
+
+    const valores =
+    lista.length
+    ? lista.map(item =>
+        Number(item.total || 0)
+    )
+    : [0];
+
+    if(chartCategoria){
+        chartCategoria.destroy();
+    }
+
+    chartCategoria =
+    new Chart(
+        canvas,
+        {
+            type:"doughnut",
+            data:{
+                labels,
+                datasets:[
+                    {
+                        data:valores,
+                        backgroundColor:[
+                            "#0097CE",
+                            "#F36F21",
+                            "#28A745",
+                            "#6F42C1",
+                            "#FFC107"
+                        ],
+                        borderWidth:0
+                    }
+                ]
+            },
+            options:{
+                responsive:true,
+                maintainAspectRatio:false,
+                plugins:{
+                    legend:{
+                        position:"bottom"
+                    }
+                },
+                cutout:"62%"
+            }
+        }
+    );
+
+}
+
+function desenharGraficoBase(lista){
+
+    const canvas =
+    document.getElementById("graficoBase");
+
+    if(!canvas || typeof Chart === "undefined"){
+        return;
+    }
+
+    const labels =
+    lista.length
+    ? lista.map(item =>
+        item.base ||
+        item.polo ||
+        item.valor ||
+        "Sem base"
+    )
+    : ["Sem dados"];
+
+    const valores =
+    lista.length
+    ? lista.map(item =>
+        Number(item.total || 0)
+    )
+    : [0];
+
+    if(chartBase){
+        chartBase.destroy();
+    }
+
+    chartBase =
+    new Chart(
+        canvas,
+        {
+            type:"bar",
+            data:{
+                labels,
+                datasets:[
+                    {
+                        label:"Movimentações",
+                        data:valores,
+                        backgroundColor:"#0097CE",
+                        borderRadius:10
+                    }
+                ]
+            },
+            options:{
+                responsive:true,
+                maintainAspectRatio:false,
+                plugins:{
+                    legend:{
+                        display:false
+                    }
+                },
+                scales:{
+                    y:{
+                        beginAtZero:true,
+                        ticks:{
+                            precision:0
+                        }
+                    }
+                }
+            }
+        }
+    );
+
+}
+
+async function carregarMovimentacoes(){
+
+    const container =
+    document.getElementById("ultimasMovimentacoes");
+
+    if(!container){
+        return;
+    }
+
+    container.innerHTML =
+    "Carregando movimentações...";
+
+    try{
+
+        const resp =
+        await authFetch(
+            `${API}/movimentacoes/recentes`
+        );
+
+        const json =
+        await resp.json();
+
+        if(!resp.ok || json.sucesso === false){
+            throw new Error(
+                json.mensagem ||
+                "Erro ao carregar movimentações."
+            );
+        }
+
+        const lista =
+        json.dados || [];
+
+        if(!lista.length){
+
+            container.innerHTML = `
+                <p style="color:#777;">
+                    Nenhuma movimentação recente encontrada.
+                </p>
+            `;
+
+            return;
+
+        }
+
+        container.innerHTML =
+        lista.slice(0,8).map(item => {
+
+            const material =
+            item.equipamento_novo ||
+            item.equipamento ||
+            item.material ||
+            "Material";
+
+            const pessoa =
+            item.colaborador ||
+            item.responsavel ||
+            item.criado_por ||
+            "Usuário";
+
+            const operacao =
+            item.operacao ||
+            "Movimentação";
+
+            return `
+                <div class="mov-card">
+
+                    <div class="mov-icone">
+                        <i class="bi bi-arrow-left-right"></i>
+                    </div>
+
+                    <div class="mov-info">
+
+                        <strong>
+                            ${escaparHTMLLocal(pessoa)}
+                        </strong>
+
+                        <p>
+                            ${escaparHTMLLocal(operacao)}
+                            de
+                            ${escaparHTMLLocal(material)}
+                        </p>
+
+                        <small>
+                            ${dataBR(
+                                item.data_movimentacao ||
+                                item.criado_em
+                            )}
+                        </small>
+
+                    </div>
+
+                </div>
+            `;
+
+        }).join("");
+
+    }catch(e){
+
+        console.error(e);
+
+        container.innerHTML = `
+            <p style="color:#dc3545;">
+                Erro ao carregar movimentações:
+                ${escaparHTMLLocal(e.message)}
+            </p>
+        `;
+
+    }
+
+}
+
+async function carregarAlertasTroca(){
+
+    const container =
+    document.getElementById("painelAlertasOperacionais");
+
+    if(!container){
+        return;
+    }
+
+    container.innerHTML =
+    "Carregando alertas...";
+
+    try{
+
+        const resp =
+        await authFetch(
+            `${API}/alertas-troca`
+        );
+
+        const json =
+        await resp.json();
+
+        if(!resp.ok || json.sucesso === false){
+            throw new Error(
+                json.mensagem ||
+                "Erro ao carregar alertas."
+            );
+        }
+
+        const lista =
+        json.dados || [];
+
+        if(!lista.length){
+
+            container.innerHTML = `
+                <div class="alerta-card verde">
+                    <strong>Sem alertas críticos</strong>
+                    <small>
+                        Nenhuma troca repetida em menos de 30 dias.
+                    </small>
+                </div>
+            `;
+
+            return;
+
+        }
+
+        container.innerHTML =
+        lista.slice(0,6).map(item => {
+
+            let classe = "laranja";
+
+            if(item.nivel === "critico"){
+                classe = "vermelho";
+            }
+
+            return `
+                <div class="alerta-card ${classe}">
+
+                    <strong>
+                        ${escaparHTMLLocal(item.colaborador)}
+                    </strong>
+
+                    <small>
+                        ${escaparHTMLLocal(item.material)}
+                        em
+                        ${Number(item.dias_entre_trocas || 0)}
+                        dia(s)
+                    </small>
+
+                </div>
+            `;
+
+        }).join("");
+
+    }catch(e){
+
+        console.error(e);
+
+        container.innerHTML = `
+            <div class="alerta-card vermelho">
+                <strong>Erro ao carregar alertas</strong>
+                <small>
+                    ${escaparHTMLLocal(e.message)}
+                </small>
+            </div>
+        `;
+
+    }
+
+}
+
+
+
+/* ======================================================
+   ESTATÍSTICAS E GRÁFICOS
+====================================================== */
+
+
 
 function desenharGraficoCategoria(lista){
 
@@ -1907,82 +2339,6 @@ function desenharGraficosVazios(){
    MOVIMENTAÇÕES
 ====================================================== */
 
-async function carregarMovimentacoes(){
-
-    const container =
-    el("ultimasMovimentacoes");
-
-    if(!container){
-        return;
-    }
-
-    /*
-      Se depois você criar uma rota no Worker:
-      GET /movimentacoes/recentes
-      essa função já tenta usar.
-    */
-
-    try{
-
-        if(
-            typeof API !== "undefined" &&
-            typeof authFetch === "function"
-        ){
-
-            const resp =
-            await authFetch(
-                `${API}/movimentacoes/recentes`
-            );
-
-            if(resp.ok){
-
-                const dados =
-                await resp.json();
-
-                const lista =
-                dados.dados ||
-                dados.movimentacoes ||
-                [];
-
-                if(lista.length){
-
-                    renderMovimentacoes(
-                        lista
-                    );
-
-                    return;
-
-                }
-
-            }
-
-        }
-
-    }catch(e){
-        console.warn(
-            "Movimentações ainda sem endpoint. Usando estado vazio."
-        );
-    }
-
-    container.innerHTML = `
-        <div class="timeline-item">
-            <div class="hora">
-                --
-            </div>
-
-            <div>
-                <strong>
-                    Nenhuma movimentação recente
-                </strong>
-
-                <p>
-                    As movimentações aparecerão aqui quando forem registradas.
-                </p>
-            </div>
-        </div>
-    `;
-
-}
 
 function renderMovimentacoes(lista){
 
@@ -2049,77 +2405,7 @@ const equipamento =
    EQUIPAMENTOS VENCENDO
 ====================================================== */
 
-async function carregarAlertasTroca(){
 
-    const tbody =
-    document.getElementById("alertasTroca");
-
-    if(!tbody){
-        return;
-    }
-
-    tbody.innerHTML = `
-        <tr>
-            <td style="padding:12px;">
-                Carregando alertas...
-            </td>
-        </tr>
-    `;
-
-    try{
-
-        const resp =
-        await authFetch(
-            `${API}/alertas-troca`
-        );
-
-        const dados =
-        await resp.json();
-
-        if(
-            !resp.ok ||
-            dados.sucesso === false
-        ){
-            throw new Error(
-                dados.mensagem ||
-                "Erro ao carregar alertas."
-            );
-        }
-
-        const lista =
-        dados.dados || [];
-
-        if(!lista.length){
-
-            tbody.innerHTML = `
-                <tr>
-                    <td style="padding:12px; color:#777;">
-                        Nenhuma troca repetida em menos de 30 dias.
-                    </td>
-                </tr>
-            `;
-
-            return;
-
-        }
-
-        renderAlertasTroca(lista);
-
-    }catch(e){
-
-        console.error(e);
-
-        tbody.innerHTML = `
-            <tr>
-                <td style="padding:12px; color:#dc3545;">
-                    Erro ao carregar alertas: ${e.message}
-                </td>
-            </tr>
-        `;
-
-    }
-
-}
     function renderAlertasTroca(lista){
 
     const tbody =
