@@ -4148,6 +4148,14 @@ async function visualizarFoto(urlOuChave){
             );
 
         }
+        console.log(
+    "CONTENT TYPE:",
+    response.headers.get("content-type")
+);
+        console.log(
+    "STATUS:",
+    response.status
+);
 
         const blob =
         await response.blob();
