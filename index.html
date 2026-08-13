@@ -2698,37 +2698,36 @@ async function abrirHistoricoTroca(
             ============================ */
 
             fotos = fotos
-                .map(foto => {
+    .map(foto => {
 
-                    if (
-                        typeof foto === "object" &&
-                        foto !== null
-                    ) {
+        if(
+            typeof foto === "object" &&
+            foto !== null
+        ){
 
-                        return (
-                            foto.url ||
-                            foto.URL ||
-                            foto.link ||
-                            foto.src ||
-                            ""
-                        );
-                    }
+            return (
+                foto.url ||
+                foto.URL ||
+                foto.link ||
+                foto.src ||
+                foto.chave ||
+                foto.key ||
+                ""
+            );
 
-                    return String(foto || "");
-                })
-                .map(foto =>
-                    foto
-                        .trim()
-                        .replace(/^["']|["']$/g, "")
-                )
-                .filter(foto =>
-                    foto.startsWith("http://") ||
-                    foto.startsWith("https://")
-                )
-                .filter(
-                    (foto, index, array) =>
-                        array.indexOf(foto) === index
-                );
+        }
+
+        return String(foto || "");
+
+    })
+    .map(foto =>
+        limparReferenciaFoto(foto)
+    )
+    .filter(foto => foto)
+    .filter(
+        (foto, index, array) =>
+            array.indexOf(foto) === index
+    );
 
 
             /* ============================
@@ -2759,44 +2758,63 @@ async function abrirHistoricoTroca(
 
                            ${fotos.map((foto,index)=>`
 
-<div style="
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-    padding:10px;
-    border:1px solid #e5e7eb;
-    border-radius:10px;
-    margin-bottom:8px;
-    background:#fff;
-">
-
-    <span>
-        📷 Foto ${index + 1}
-    </span>
-
     <div style="
         display:flex;
-        gap:8px;
+        align-items:center;
+        justify-content:space-between;
+        gap:10px;
+        padding:10px;
+        border:1px solid #e5e7eb;
+        border-radius:10px;
+        margin-bottom:8px;
+        background:#fff;
     ">
 
-        <button
-            onclick="window.open('${foto}','_blank')"
-            class="btn-salvar"
-        >
-            Visualizar
-        </button>
+        <span>
+            📷 Foto ${index + 1}
+        </span>
 
-        <button
-            onclick="baixarFoto('${foto}')"
-            class="btn-cancelar"
-        >
-            Baixar
-        </button>
+        <div style="
+            display:flex;
+            gap:8px;
+            flex-wrap:wrap;
+        ">
+
+            <button
+                type="button"
+                onclick="visualizarFoto('${escaparAtributo(foto)}')"
+                style="
+                    border:none;
+                    background:#0097CE;
+                    color:white;
+                    padding:8px 10px;
+                    border-radius:8px;
+                    cursor:pointer;
+                    font-weight:700;
+                "
+            >
+                Visualizar
+            </button>
+
+            <button
+                type="button"
+                onclick="baixarFoto('${escaparAtributo(foto)}')"
+                style="
+                    border:none;
+                    background:#f1f5f9;
+                    color:#111827;
+                    padding:8px 10px;
+                    border-radius:8px;
+                    cursor:pointer;
+                    font-weight:700;
+                "
+            >
+                Baixar
+            </button>
+
+        </div>
 
     </div>
-
-</div>
 
 `).join("")}
                     </div>
@@ -3979,6 +3997,228 @@ function escaparAtributo(valor){
         .replace(/"/g, "&quot;");
 
 }
+    function limparReferenciaFoto(valor){
+
+    let texto =
+    String(valor || "")
+    .trim();
+
+    if(!texto){
+        return "";
+    }
+
+    const matchHref =
+    texto.match(/href=[^"']+["']/i);
+
+    if(matchHref && matchHref[1]){
+        texto = matchHref[1];
+    }
+
+    texto =
+    texto
+    .replace(/`/g,"")
+    .replace(/;/g,"")
+    .replace(/^["']|["']$/g,"")
+    .trim();
+
+    return texto;
+
+}
+
+async function baixarFoto(urlOuChave){
+
+    try{
+
+        const ref =
+        limparReferenciaFoto(
+            urlOuChave
+        );
+
+        if(!ref){
+            alert("Foto inválida.");
+            return;
+        }
+
+        const endpoint =
+        `${API}/baixar-foto?url=${encodeURIComponent(ref)}`;
+
+        const response =
+        await authFetch(
+            endpoint
+        );
+
+        if(!response.ok){
+
+            let erro = {};
+
+            try{
+                erro = await response.json();
+            }catch(e){
+                erro = {};
+            }
+
+            throw new Error(
+                erro.mensagem ||
+                "Não foi possível baixar a imagem."
+            );
+
+        }
+
+        const blob =
+        await response.blob();
+
+        const objectUrl =
+        URL.createObjectURL(
+            blob
+        );
+
+        const link =
+        document.createElement("a");
+
+        link.href =
+        objectUrl;
+
+        link.download =
+        gerarNomeFoto(
+            ref
+        );
+
+        document.body.appendChild(
+            link
+        );
+
+        link.click();
+
+        document.body.removeChild(
+            link
+        );
+
+        URL.revokeObjectURL(
+            objectUrl
+        );
+
+    }catch(e){
+
+        console.error(e);
+
+        alert(
+            "Não foi possível baixar a imagem: " +
+            e.message
+        );
+
+    }
+
+}
+
+async function visualizarFoto(urlOuChave){
+
+    try{
+
+        const ref =
+        limparReferenciaFoto(
+            urlOuChave
+        );
+
+        if(!ref){
+            alert("Foto inválida.");
+            return;
+        }
+
+        const endpoint =
+        `${API}/visualizar-foto?url=${encodeURIComponent(ref)}`;
+
+        const response =
+        await authFetch(
+            endpoint
+        );
+
+        if(!response.ok){
+
+            let erro = {};
+
+            try{
+                erro = await response.json();
+            }catch(e){
+                erro = {};
+            }
+
+            throw new Error(
+                erro.mensagem ||
+                "Não foi possível visualizar a imagem."
+            );
+
+        }
+
+        const blob =
+        await response.blob();
+
+        const objectUrl =
+        URL.createObjectURL(
+            blob
+        );
+
+        window.open(
+            objectUrl,
+            "_blank"
+        );
+
+        /*
+          Não revogar imediatamente, senão algumas abas
+          podem não carregar em tempo.
+        */
+        setTimeout(
+            function(){
+                URL.revokeObjectURL(
+                    objectUrl
+                );
+            },
+            60000
+        );
+
+    }catch(e){
+
+        console.error(e);
+
+        alert(
+            "Não foi possível visualizar a imagem: " +
+            e.message
+        );
+
+    }
+
+}
+
+function gerarNomeFoto(ref){
+
+    try{
+
+        if(
+            ref.startsWith("http://") ||
+            ref.startsWith("https://")
+        ){
+
+            const url =
+            new URL(ref);
+
+            const partes =
+            url.pathname.split("/");
+
+            return partes[partes.length - 1] ||
+            `evidencia_${Date.now()}.jpg`;
+
+        }
+
+    }catch(e){}
+
+    const partes =
+    String(ref || "")
+    .split("/");
+
+    return partes[partes.length - 1] ||
+    `evidencia_${Date.now()}.jpg`;
+
+}
+    
 
 document.addEventListener("input", function(e){
 
