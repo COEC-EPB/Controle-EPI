@@ -1506,50 +1506,7 @@ id="modalHistoricoTroca">
     ]
 
 };
-
-function abrirEntradaMaterial(){
-
-    carregarPolosEntrada();
-
-    const usuario =
-        getUser?.() || {};
-
-    const recebedor =
-        document.getElementById(
-            "recebedorEntrada"
-        );
-
-    if(recebedor){
-
-        recebedor.value =
-            usuario.nome || "";
-
-        recebedor.readOnly = true;
-
-    }
-
-    document.getElementById(
-        "modalEntradaMaterial"
-    ).style.display = "flex";
-
-}
-
- async function abrirEntradaMaterial(){
-
-    carregarPolosEntrada();
-
-    await carregarListaMateriais();
-
-    document.getElementById(
-        "recebedorEntrada"
-    ).value =
-        usuarioLogado.nome || "";
-
-    document.getElementById(
-        "modalEntradaMaterial"
-    ).style.display = "flex";
-
-}   
+  
 function carregarPolosEntrada(){
 
     const select =
@@ -1664,7 +1621,6 @@ function limparTexto(valor){
 async function carregarUsuario(){
 
     let usuario = null;
-    usuarioLogado = usuario || {};
 
     try{
 
@@ -1814,20 +1770,66 @@ async function carregarUsuario(){
 
 }
     /*entrada de material*/
-async function abrirEntradaMaterial(){
+    async function abrirEntradaMaterial(){
 
     carregarPolosEntrada();
 
-    await carregarListaMateriais();
+    const usuario =
+        usuarioLogado && Object.keys(usuarioLogado).length
+        ? usuarioLogado
+        : (
+            typeof getUser === "function"
+            ? getUser()
+            : {}
+        );
 
-    document.getElementById(
-        "recebedorEntrada"
-    ).value =
-        usuarioLogado.nome || "";
+    const recebedor =
+        document.getElementById("recebedorEntrada");
 
-    document.getElementById(
-        "modalEntradaMaterial"
-    ).style.display = "flex";
+    if(recebedor){
+
+        recebedor.value =
+            usuario?.nome ||
+            usuario?.name ||
+            "";
+
+        recebedor.readOnly = true;
+
+        recebedor.style.background =
+            "#f1f5f9";
+
+    }
+
+    const poloEntrada =
+        document.getElementById("poloEntrada");
+
+    const baseEntrada =
+        document.getElementById("baseEntrada");
+
+    if(poloEntrada && usuario?.polo){
+
+        poloEntrada.value =
+            String(usuario.polo).toUpperCase();
+
+        atualizarBases();
+
+    }
+
+    if(baseEntrada && usuario?.base){
+
+        baseEntrada.value =
+            String(usuario.base).toUpperCase();
+
+    }
+
+    const modal =
+        document.getElementById("modalEntradaMaterial");
+
+    if(modal){
+
+        modal.style.display = "flex";
+
+    }
 
 }
 
@@ -3559,37 +3561,75 @@ await carregarMovimentacoes();
 
 function limparEntradaMaterial(){
 
-    const material = document.getElementById("materialEntrada");
-    if(material) material.value = "";
+    const material =
+        document.getElementById("materialEntrada");
 
-    const codigo = document.getElementById("codigoEntrada");
-    if(codigo) codigo.value = "";
+    if(material){
+        material.value = "";
+    }
 
-    const quantidade = document.getElementById("quantidadeEntrada");
-    if(quantidade) quantidade.value = 1;
+    const codigo =
+        document.getElementById("codigoEntrada");
 
-    const polo = document.getElementById("poloEntrada");
-    if(polo) polo.value = "";
+    if(codigo){
+        codigo.value = "";
+    }
 
-    const base = document.getElementById("baseEntrada");
-    if(base) base.innerHTML = '<option value="">Selecione</option>';
+    const quantidade =
+        document.getElementById("quantidadeEntrada");
+
+    if(quantidade){
+        quantidade.value = 1;
+    }
+
+    const polo =
+        document.getElementById("poloEntrada");
+
+    if(polo){
+        polo.value = "";
+    }
+
+    const base =
+        document.getElementById("baseEntrada");
+
+    if(base){
+        base.innerHTML =
+            '<option value="">Selecione</option>';
+    }
 
     const recebedor =
-    document.getElementById("recebedorEntrada");
+        document.getElementById("recebedorEntrada");
 
-recebedor.value =
-    usuario?.nome || "";
+    if(recebedor){
 
-recebedor.readOnly = true;
+        recebedor.value =
+            usuarioLogado?.nome || "";
 
-recebedor.style.background =
-    "#f1f5f9";
+        recebedor.readOnly = true;
 
-    const fornecedor = document.getElementById("fornecedorEntrada");
-    if(fornecedor) fornecedor.value = "";
+        recebedor.style.background =
+            "#f1f5f9";
 
-        const obs = document.getElementById("obsEntrada");
-    if(obs) obs.value = "";
+    }
+
+    const fornecedor =
+        document.getElementById("fornecedorEntrada");
+
+    if(fornecedor){
+        fornecedor.value = "";
+    }
+
+    const obs =
+        document.getElementById("obsEntrada");
+
+    if(obs){
+        obs.value = "";
+    }
+
+}
+    async function carregarListaMateriais(){
+
+    return MATERIAIS;
 
 }
 
