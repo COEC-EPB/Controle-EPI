@@ -1270,7 +1270,13 @@ id="modalEntradaMaterial">
                 <label>Código</label>
 
                 <input
-                id="codigoEntrada">
+    id="codigoEntrada"
+    readonly
+    style="
+        background:#f1f5f9;
+        font-weight:700;
+    "
+>
             </div>
 
             <div>
@@ -1609,6 +1615,13 @@ id="modalHistoricoTroca">
     document.getElementById(
         "materialEntrada"
     ).value = material;
+
+    const codigo =
+        material.split(" - ")[0]?.trim() || "";
+
+    document.getElementById(
+        "codigoEntrada"
+    ).value = codigo;
 
     document.getElementById(
         "sugestoesMateriais"
