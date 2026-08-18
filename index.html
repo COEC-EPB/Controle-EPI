@@ -294,14 +294,12 @@ CARDS
 =================================== */
 
 .cards{
-
     display:grid;
 
     grid-template-columns:
-    repeat(4,1fr);
+        repeat(auto-fit,minmax(250px,1fr));
 
     gap:20px;
-
 }
 
 .card{
@@ -898,6 +896,9 @@ MELHORIAS DASHBOARD OPERACIONAL
 
     }
 
+}.alerta-card.azul{
+    border-left:5px solid #0097CE;
+    background:#EFF8FF;
 }
 
 </style>
@@ -1091,13 +1092,37 @@ onclick="window.location.href='https://coec-epb.github.io/colaboradores_material
             <h3>🚨 Trocas &lt; 30 dias</h3>
             <span class="kpi-tag vermelho">Atenção</span>
         </div>
-
+                
         <h2 id="totalTrocasRapidas">0</h2>
 
         <small>
             Possíveis reincidências
         </small>
     </div>
+    <div class="card divergencias">
+        <div class="card-top">
+            <h3>🚨 Trocas &lt; 60 dias</h3>
+            <span class="kpi-tag laranja">Atenção</span>
+        </div>
+                
+        <h2 id="totalTrocas60">0</h2>
+
+        <small>
+            Possíveis reincidências
+        </small>
+    </div>
+        <div class="card divergencias">
+        <div class="card-top">
+            <h3>🚨 Trocas &lt; 90 dias</h3>
+            <span class="kpi-tag azul">Monitoramento</span>
+        </div>
+                
+        <h2 id="totalTrocas90">0</h2>
+
+        <small>
+            Possíveis reincidências
+        </small>
+    </div> 
 
 </section>
 
@@ -2645,7 +2670,45 @@ async function carregarAlertasTroca(){
 
         const lista =
         json.dados || [];
+        let qtd30 = 0;
+let qtd60 = 0;
+let qtd90 = 0;
 
+lista.forEach(item => {
+
+    const dias =
+        Number(item.dias_entre_trocas || 0);
+
+    if(dias < 30){
+
+        qtd30++;
+
+    }else if(dias < 60){
+
+        qtd60++;
+
+    }else if(dias < 90){
+
+        qtd90++;
+
+    }
+
+});
+
+texto(
+    "totalTrocasRapidas",
+    qtd30
+);
+
+texto(
+    "totalTrocas60",
+    qtd60
+);
+
+texto(
+    "totalTrocas90",
+    qtd90
+);
         if(!lista.length){
 
             container.innerHTML = `
@@ -2662,13 +2725,43 @@ async function carregarAlertasTroca(){
         }
 
         container.innerHTML =
-lista.slice(0,6).map(item => {
+lista
+.filter(item => {
 
-    let classe = "laranja";
+    const dias =
+        Number(item.dias_entre_trocas || 0);
 
-    if(item.nivel === "critico"){
-        classe = "vermelho";
-    }
+    return dias < 90;
+
+})
+.sort((a,b)=>
+    Number(a.dias_entre_trocas || 0)
+    -
+    Number(b.dias_entre_trocas || 0)
+)
+.slice(0,10)
+.map(item => { 
+
+    const dias =
+    Number(item.dias_entre_trocas || 0);
+
+let classe = "verde";
+
+if(dias < 30){
+
+    classe = "vermelho";
+
+}
+else if(dias < 60){
+
+    classe = "laranja";
+
+}
+else if(dias < 90){
+
+    classe = "azul";
+
+}
 
     return `
 
