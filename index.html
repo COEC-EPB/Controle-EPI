@@ -508,6 +508,7 @@ RODAPÉ DASHBOARD
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:15px;
+    padding:25px;
 }
 
 .form-grid label{
@@ -522,10 +523,14 @@ RODAPÉ DASHBOARD
 
     width:100%;
     padding:10px;
-
+    background:#FAFAFA;
     border:1px solid #DADADA;
 
     border-radius:10px;
+}
+.form-grid input:hover,
+.form-grid select:hover{
+border-color:#0097CE;
 }
 
 .modal-footer{
@@ -737,30 +742,162 @@ MELHORIAS DASHBOARD OPERACIONAL
     box-shadow:
     0 8px 20px rgba(0,0,0,.12);
 
-}.sugestoes{
+}.campo-autocomplete{
+
+    position:relative;
+
+    width:100%;
+
+}
+
+.sugestoes{
+
     position:absolute;
-    top:74px;
+
+    top:100%;
+
     left:0;
+
     right:0;
 
-    background:white;
+    margin-top:6px;
 
-    border:1px solid #ddd;
+    background:#fff;
 
-    border-radius:12px;
+    border:1px solid #E5E7EB;
 
-    box-shadow:0 8px 20px rgba(0,0,0,.12);
+    border-radius:16px;
 
-    z-index:500;
+    overflow:hidden;
+
+    max-height:420px;
+
+    overflow-y:auto;
+
+    z-index:9999;
 
     display:none;
 
-    max-height:500px; /* antes 260 */
+    box-shadow:
+        0 15px 40px rgba(0,0,0,.15);
 
-    overflow-y:auto;
-}.campo-autocomplete{
-    position:relative;
-    width:100%;
+}
+
+.sugestao-item{
+
+    display:flex;
+
+    align-items:flex-start;
+
+    gap:12px;
+
+    padding:12px;
+
+    cursor:pointer;
+
+    transition:.15s;
+
+    border-bottom:
+        1px solid #F1F5F9;
+
+}
+
+.sugestao-item:last-child{
+
+    border-bottom:none;
+
+}
+
+.sugestao-item:hover{
+
+    background:#F8FAFC;
+
+}
+
+.sugestao-codigo{
+
+    min-width:80px;
+
+    background:#E0F2FE;
+
+    color:#0369A1;
+
+    border-radius:8px;
+
+    padding:6px 8px;
+
+    text-align:center;
+
+    font-size:12px;
+
+    font-weight:800;
+
+}
+
+.sugestao-descricao{
+
+    flex:1;
+
+    font-size:14px;
+
+    color:#111827;
+
+    line-height:1.4;
+
+}
+
+.sugestao-descricao strong{
+
+    display:block;
+
+    color:#111827;
+
+}
+@media(max-width:900px){
+
+    .sidebar{
+        display:none;
+    }
+
+    .main{
+        margin-left:0;
+        padding:15px;
+    }
+
+    .header{
+
+        flex-direction:column;
+        align-items:flex-start;
+        gap:15px;
+
+    }
+
+    .header-right{
+
+        width:100%;
+        flex-wrap:wrap;
+
+    }
+
+    .header-right input{
+
+        width:100%;
+    }
+
+    .cards,
+    .graficos,
+    .inferior{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .form-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
 }
 
 </style>
@@ -1569,56 +1706,21 @@ id="modalHistoricoTroca">
   "80120 - VARA MANOBRA SECCION REFOR PRFV 5 ELEM 38MM 6.450MM LRJ/AMA"
 ];
 
-    function buscarMaterial(){
+    
+ function selecionarMaterial(material){
 
-    const texto =
-        document.getElementById("materialEntrada")
-        .value
-        .toLowerCase()
-        .trim();
+    const partes =
+        material.split(" - ");
 
-    const box =
-        document.getElementById(
-            "sugestoesMateriais"
-        );
+    const codigo =
+        partes.shift();
 
-    if(!texto){
-
-        box.style.display = "none";
-        return;
-
-    }
-
-    const encontrados =
-        MATERIAIS.filter(item =>
-            item.toLowerCase().includes(texto)
-        ).slice(0,50);
-
-    box.innerHTML =
-        encontrados.map(material => `
-            <div
-                class="sugestao-item"
-                onclick="selecionarMaterial('${material.replace(/'/g,"\\'")}')">
-
-                <strong>${material}</strong>
-
-            </div>
-        `).join("");
-
-    box.style.display =
-        encontrados.length
-        ? "block"
-        : "none";
-
-}
-    function selecionarMaterial(material){
+    const descricao =
+        partes.join(" - ");
 
     document.getElementById(
         "materialEntrada"
-    ).value = material;
-
-    const codigo =
-        material.split(" - ")[0]?.trim() || "";
+    ).value = descricao;
 
     document.getElementById(
         "codigoEntrada"
