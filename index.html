@@ -464,93 +464,17 @@ RODAPÉ DASHBOARD
     font-size:12px;
 
 }
- .modal-overlay{
-    display:none;
+/* ===================================
+MODAL
+=================================== */
+
+.modal-overlay{
+    display:non*;
     position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.55);
-    z-index:9999;
+    inset:0;*    background:rgba(0,0,0,.55);
+  * backdrop-filter:blur(3px);
+    z-*
 
-    justify-content:center;
-    align-items:center;
-}
-
-.modal{
-    background:#fff;
-    width:900px;
-    max-width:95vw;
-    max-height:90vh;
-    overflow:auto;
-
-    border-radius:20px;
-    padding:25px;
-
-    box-shadow:
-    0 20px 50px rgba(0,0,0,.25);
-}
-
-.modal-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-
-    margin-bottom:20px;
-}
-
-.fechar-modal{
-    border:none;
-    background:none;
-    font-size:28px;
-    cursor:pointer;
-}
-
-.form-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:15px;
-}
-
-.form-grid label{
-    display:block;
-    margin-bottom:5px;
-    font-weight:600;
-}
-
-.form-grid input,
-.form-grid select,
-.form-grid textarea{
-
-    width:100%;
-    padding:10px;
-
-    border:1px solid #DADADA;
-
-    border-radius:10px;
-}
-
-.modal-footer{
-    margin-top:20px;
-    display:flex;
-    justify-content:flex-end;
-    gap:10px;
-}
-
-.btn-salvar{
-    background:#0097CE;
-    color:white;
-    border:none;
-    padding:12px 20px;
-    border-radius:10px;
-    cursor:pointer;
-}
-
-.btn-cancelar{
-    background:#EEE;
-    border:none;
-    padding:12px 20px;
-    border-radius:10px;
-    cursor:pointer;
-}   
     .status-ativo{
     background:#28A745;
     color:white;
@@ -761,6 +685,41 @@ MELHORIAS DASHBOARD OPERACIONAL
 }.campo-autocomplete{
     position:relative;
     width:100%;
+}.form-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:18px 20px;
+
+    align-items:start;
+
+}
+
+.form-grid > div{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.form-grid label{
+
+    display:block;
+
+    margin-bottom:6px;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    color:#111827;
+
+    min-height:20px;
+
 }
 
 </style>
@@ -1246,24 +1205,25 @@ id="modalEntradaMaterial">
             </div>
 
             <div>
-                <label>Material</label>
-
-                <div class="campo campo-autocomplete">
 
     <label>Material / Equipamento</label>
 
-    <input
-        id="materialEntrada"
-        placeholder="Digite para pesquisar"
-        autocomplete="off"
-        oninput="buscarMaterial()">
+    <div class="campo-autocomplete">
 
-    <div
-        id="sugestoesMateriais"
-        class="sugestoes">
+        <input
+            id="materialEntrada"
+            placeholder="Digite para pesquisar"
+            autocomplete="off"
+            oninput="buscarMaterial()"
+        >
+
+        <div
+            id="sugestoesMateriais"
+            class="sugestoes">
+        </div>
+
     </div>
 
-</div>
 </div>
 
             <div>
