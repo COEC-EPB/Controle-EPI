@@ -737,6 +737,27 @@ MELHORIAS DASHBOARD OPERACIONAL
     box-shadow:
     0 8px 20px rgba(0,0,0,.12);
 
+}.sugestoes{
+    position:absolute;
+    top:74px;
+    left:0;
+    right:0;
+
+    background:white;
+
+    border:1px solid #ddd;
+
+    border-radius:12px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.12);
+
+    z-index:500;
+
+    display:none;
+
+    max-height:500px; /* antes 260 */
+
+    overflow-y:auto;
 }
 
 </style>
@@ -1224,9 +1245,22 @@ id="modalEntradaMaterial">
             <div>
                 <label>Material</label>
 
-                <select id="materialEntrada">
-    <option value="">Carregando...</option>
-</select>
+                <div class="campo campo-autocomplete">
+
+    <label>Material / Equipamento</label>
+
+    <input
+        id="materialEntrada"
+        placeholder="Digite para pesquisar"
+        autocomplete="off"
+        oninput="buscarMaterial()">
+
+    <div
+        id="sugestoesMateriais"
+        class="sugestoes">
+    </div>
+
+</div>
 
             <div>
                 <label>Código</label>
@@ -1347,6 +1381,100 @@ id="modalHistoricoTroca">
 
 <script>
     let usuarioLogado = {};
+
+    const MATERIAIS = [
+
+"320527 - BALACLAVA CAPUZ ANTICHAMAS",
+
+"80055 - CAPACETE SEGURANCA PEAD ABA TOTAL TIPO I CLASSE B BRC",
+
+"80059 - CAPACETE SEGURANCA PEAD ABA FRONTAL TIPO II CLASSE B BRC",
+
+"CALCA P ANTICHAMA DISTR M04",
+
+"CALCA M ANTICHAMA DISTR M04",
+
+"CAMISA P ANTICHAMA DISTR M03",
+
+"CAMISA M ANTICHAMA DISTR M03",
+
+"LUVA DE VAQUETA TAM 9",
+
+"LUVA DE COBERTURA TAM 9",
+
+"LUVA ISOLANTE SEGURANCA 9IN 360MM CL0 1,0KV PRT",
+
+"MANTA ISOLANTE DE BT",
+
+"CONE SINALIZACAO REFLEX 400X400X750MM LRJ/BRC",
+
+"VARA MANOBRA TELESC",
+
+"ALICATE UNIVERSAL 1KV 8 POLEGADAS",
+
+"CHAVE CATRACA 13",
+
+"CHAVE CATRACA 17",
+
+"ALICATE AMPERIMETRO",
+
+"PLACA DE SINALIZAÇÃO (HOMENS TRABALHANDO)"
+
+];
+
+    function buscarMaterial(){
+
+    const texto =
+        document.getElementById("materialEntrada")
+        .value
+        .toLowerCase()
+        .trim();
+
+    const box =
+        document.getElementById(
+            "sugestoesMateriais"
+        );
+
+    if(!texto){
+
+        box.style.display = "none";
+        return;
+
+    }
+
+    const encontrados =
+        MATERIAIS.filter(item =>
+            item.toLowerCase().includes(texto)
+        ).slice(0,50);
+
+    box.innerHTML =
+        encontrados.map(material => `
+            <div
+                class="sugestao-item"
+                onclick="selecionarMaterial('${material.replace(/'/g,"\\'")}')">
+
+                <strong>${material}</strong>
+
+            </div>
+        `).join("");
+
+    box.style.display =
+        encontrados.length
+        ? "block"
+        : "none";
+
+}
+    function selecionarMaterial(material){
+
+    document.getElementById(
+        "materialEntrada"
+    ).value = material;
+
+    document.getElementById(
+        "sugestoesMateriais"
+    ).style.display = "none";
+
+}
 
     const BASES_POR_POLO = {
 
@@ -4290,6 +4418,27 @@ function gerarNomeFoto(ref){
     `evidencia_${Date.now()}.jpg`;
 
 }
+    document.addEventListener("click",function(e){
+
+    const box =
+        document.getElementById(
+            "sugestoesMateriais"
+        );
+
+    const campo =
+        document.getElementById(
+            "materialEntrada"
+        );
+
+    if(
+        box &&
+        e.target !== campo &&
+        !box.contains(e.target)
+    ){
+        box.style.display = "none";
+    }
+
+});
     
 
 document.addEventListener("input", function(e){
