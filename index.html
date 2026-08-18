@@ -760,6 +760,7 @@ MELHORIAS DASHBOARD OPERACIONAL
     overflow-y:auto;
 }.campo-autocomplete{
     position:relative;
+    width:100%;
 }
 
 </style>
@@ -1506,16 +1507,26 @@ id="modalHistoricoTroca">
 
 };
 
-    function abrirEntradaMaterial(){
+function abrirEntradaMaterial(){
 
     carregarPolosEntrada();
 
-    const usuario = getUser();
+    const usuario =
+        getUser?.() || {};
 
-    document.getElementById("recebedorEntrada").value =
-        usuario?.nome ||
-        usuario?.usuario ||
-        "";
+    const recebedor =
+        document.getElementById(
+            "recebedorEntrada"
+        );
+
+    if(recebedor){
+
+        recebedor.value =
+            usuario.nome || "";
+
+        recebedor.readOnly = true;
+
+    }
 
     document.getElementById(
         "modalEntradaMaterial"
