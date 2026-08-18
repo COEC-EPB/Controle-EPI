@@ -1732,6 +1732,69 @@ id="modalHistoricoTroca">
 
 }
 
+function buscarMaterial(){
+
+    const texto =
+        document.getElementById("materialEntrada")
+        .value
+        .toLowerCase()
+        .trim();
+
+    const box =
+        document.getElementById("sugestoesMateriais");
+
+    if(!texto){
+
+        box.style.display = "none";
+        return;
+
+    }
+
+    const encontrados =
+        MATERIAIS.filter(item =>
+            item.toLowerCase().includes(texto)
+        ).slice(0,30);
+
+    box.innerHTML =
+        encontrados.map(material => {
+
+            const partes =
+                material.split(" - ");
+
+            const codigo =
+                partes.shift() || "";
+
+            const descricao =
+                partes.join(" - ");
+
+            return `
+
+                <div
+                    class="sugestao-item"
+                    onclick="selecionarMaterial('${material.replace(/'/g,"\\'")}')"
+                >
+
+                    <div class="sugestao-codigo">
+                        ${codigo}
+                    </div>
+
+                    <div class="sugestao-descricao">
+                        ${descricao}
+                    </div>
+
+                </div>
+
+            `;
+
+        }).join("");
+
+    box.style.display =
+        encontrados.length
+        ? "block"
+        : "none";
+
+}
+
     const BASES_POR_POLO = {
 
     "JOÃO PESSOA":[
