@@ -758,6 +758,8 @@ MELHORIAS DASHBOARD OPERACIONAL
     max-height:500px; /* antes 260 */
 
     overflow-y:auto;
+}.campo-autocomplete{
+    position:relative;
 }
 
 </style>
@@ -1261,6 +1263,7 @@ id="modalEntradaMaterial">
     </div>
 
 </div>
+</div>
 
             <div>
                 <label>Código</label>
@@ -1520,43 +1523,22 @@ id="modalHistoricoTroca">
 
 }
 
-    async function carregarListaMateriais(){
+ async function abrirEntradaMaterial(){
 
-    try{
+    carregarPolosEntrada();
 
-        const resp =
-            await authFetch(
-                `${API}/materiais`
-            );
+    await carregarListaMateriais();
 
-        const json =
-            await resp.json();
+    document.getElementById(
+        "recebedorEntrada"
+    ).value =
+        usuarioLogado.nome || "";
 
-        const select =
-            document.getElementById(
-                "materialEntrada"
-            );
+    document.getElementById(
+        "modalEntradaMaterial"
+    ).style.display = "flex";
 
-        select.innerHTML =
-            `<option value="">Selecione</option>`;
-
-        (json.items || []).forEach(item => {
-
-            select.innerHTML += `
-                <option value="${item.material}">
-                    ${item.material}
-                </option>
-            `;
-
-        });
-
-    }catch(e){
-
-        console.error(e);
-
-    }
-
-}
+}   
 function carregarPolosEntrada(){
 
     const select =
@@ -1672,7 +1654,7 @@ async function carregarUsuario(){
 
     let usuario = null;
     usuarioLogado = usuario || {};
-    texto("nomeUsuario", nome);
+
     try{
 
         if(
