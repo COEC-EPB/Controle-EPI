@@ -3983,6 +3983,14 @@ document.addEventListener(
 
         await carregarAlertasTroca();
 
+        /*
+         * Se veio da página de movimentações,
+         * abre automaticamente as configurações
+         * e o modal do usuário.
+         */
+
+        await abrirUsuarioPelaURL();
+
     }
 );
     
@@ -4594,6 +4602,162 @@ function editarUsuarioSistema(matricula){
     "flex";
 
 }
+    async function abrirUsuarioPelaURL(){
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+    const matricula =
+        String(
+            params.get("editarMatricula") || ""
+        )
+        .trim();
+
+    if(!matricula){
+        return;
+    }
+
+    /*
+     * Se não for administrador, não permite
+     * carregar o painel ou abrir o modal.
+     */
+
+    if(!usuarioAtualEhAdmin()){
+
+        alert(
+            "🔒 Cadastro incompleto\n\n" +
+            `O colaborador de matrícula ${matricula} precisa ter Polo e Base atualizados.\n\n` +
+            "Somente um administrador pode realizar essa alteração. Entre em contato com um administrador do sistema."
+        );
+
+        removerParametrosEdicaoURL();
+
+        return;
+
+    }
+
+    /*
+     * Abre as configurações e aguarda os usuários
+     * serem carregados.
+     */
+
+    const abriu =
+        await abrirConfiguracoes();
+
+    if(!abriu){
+        return;
+    }
+
+    const usuario =
+        usuariosSistemaCache.find(
+            item =>
+                String(item.matricula || "").trim() ===
+                matricula
+        );
+
+    if(!usuario){
+
+        alert(
+            `O usuário de matrícula ${matricula} não foi encontrado nas Configurações do Sistema.`
+        );
+
+        const pesquisa =
+            document.getElementById(
+                "pesquisaUsuarioSistema"
+            );
+
+        if(pesquisa){
+
+            pesquisa.value =
+                matricula;
+
+            renderUsuariosSistema();
+
+        }
+
+        return;
+
+    }
+
+    /*
+     * Abre diretamente o modal de edição
+     * com o usuário correto.
+     */
+
+    editarUsuarioSistema(
+        usuario.matricula
+    );
+
+    /*
+     * Realça os campos que precisam ser corrigidos.
+     */
+
+    destacarCamposLocalizacao();
+
+}
+
+    function destacarCamposLocalizacao(){
+
+    const polo =
+        document.getElementById(
+            "usuarioPolo"
+        );
+
+    const base =
+        document.getElementById(
+            "usuarioBase"
+        );
+
+    if(polo){
+
+        polo.style.border =
+            "2px solid #F36F21";
+
+        polo.style.background =
+            "#FFF7ED";
+
+        polo.focus();
+
+    }
+
+    if(base){
+
+        base.style.border =
+            "2px solid #F36F21";
+
+        base.style.background =
+            "#FFF7ED";
+
+    }
+
+}
+
+    function removerParametrosEdicaoURL(){
+
+    const url =
+        new URL(
+            window.location.href
+        );
+
+    url.searchParams.delete(
+        "editarMatricula"
+    );
+
+    url.searchParams.delete(
+        "origem"
+    );
+
+    window.history.replaceState(
+        {},
+        document.title,
+        url.pathname +
+        url.search +
+        url.hash
+    );
+
+}
 async function salvarUsuarioSistema(){
 
     const modo =
@@ -4626,9 +4790,20 @@ async function salvarUsuarioSistema(){
     const ativo =
         Number(document.getElementById("usuarioAtivo").value);
 
-    if(!matricula || !nome || !regional){
-    alert("Preencha matrícula, nome e regional.");
+    if(
+    !matricula ||
+    !nome ||
+    !regional ||
+    !polo ||
+    !base
+){
+
+    alert(
+        "Preencha matrícula, nome, regional, Polo e Base."
+    );
+
     return;
+
 }
 
     if(cpf && cpf.length !== 11){
@@ -4650,15 +4825,7 @@ async function salvarUsuarioSistema(){
     polo,
     base
 });
-        alert(
-    JSON.stringify({
-        matricula,
-        nome,
-        regional,
-        polo,
-        base
-    })
-);
+        
 
         const payload = {
     matricula: matricula,
@@ -4708,6 +4875,7 @@ console.log(payload);
         }
 
         alert("✅ Usuário salvo com sucesso.");
+        removerParametrosEdicaoURL();
 
         fecharModalUsuarioSistema();
 
