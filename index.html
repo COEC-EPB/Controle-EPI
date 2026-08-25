@@ -4697,6 +4697,24 @@ function editarUsuarioSistema(matricula){
     destacarCamposLocalizacao();
 
 }
+    function usuarioAtualEhAdmin(){
+
+    const usuario =
+        usuarioLogado || {};
+
+    const perfil =
+        String(
+            usuario.role ||
+            usuario.perfil ||
+            ""
+        ).toLowerCase();
+
+    return (
+        perfil === "admin" ||
+        usuario.isAdmin === true
+    );
+
+}
 
     function destacarCamposLocalizacao(){
 
