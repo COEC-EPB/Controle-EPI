@@ -2087,66 +2087,220 @@ function buscarMaterial(){
 
 };
   
-function carregarPolosEntrada(){
+function obterTodosPolos(){
 
-    const select =
-    document.getElementById(
-        "poloEntrada"
+    const polos = [];
+
+    Object.values(BASES_POR_POLO)
+    .forEach(regional => {
+
+        Object.keys(regional)
+        .forEach(polo => {
+
+            if(!polos.includes(polo)){
+                polos.push(polo);
+            }
+
+        });
+
+    });
+
+    return polos.sort(
+        (a, b) =>
+            a.localeCompare(b, "pt-BR")
     );
-
-    select.innerHTML = `
-
-        <option value="">
-            Selecione
-        </option>
-
-        <option value="JOÃO PESSOA">
-            JOÃO PESSOA
-        </option>
-
-        <option value="ITABAIANA">
-            ITABAIANA
-        </option>
-
-        <option value="MAMANGUAPE">
-            MAMANGUAPE
-        </option>
-
-    `;
 
 }
 
-    function atualizarBases(){
+function obterBasesPorPolo(polo){
 
-    const polo =
-    document.getElementById(
-        "poloEntrada"
-    ).value;
+    const poloNormalizado =
+        String(polo || "")
+        .trim()
+        .toUpperCase();
 
-    const selectBase =
-    document.getElementById(
-        "baseEntrada"
-    );
+    if(!poloNormalizado){
+        return [];
+    }
 
-    selectBase.innerHTML =
-    `<option value="">Selecione</option>`;
+    for(
+        const regional
+        of Object.values(BASES_POR_POLO)
+    ){
 
-    if(!BASES_POR_POLO[polo]){
+        const poloEncontrado =
+            Object.keys(regional)
+            .find(nomePolo =>
+
+                String(nomePolo)
+                .trim()
+                .toUpperCase() ===
+                poloNormalizado
+
+            );
+
+        if(poloEncontrado){
+
+            return Array.isArray(
+                regional[poloEncontrado]
+            )
+            ? regional[poloEncontrado]
+            : [];
+
+        }
+
+    }
+
+    return [];
+
+}
+
+function carregarPolosEntrada(
+    poloSelecionado = ""
+){
+
+    const selectPolo =
+        document.getElementById(
+            "poloEntrada"
+        );
+
+    if(!selectPolo){
         return;
     }
 
-    BASES_POR_POLO[polo]
-    .forEach(base => {
+    selectPolo.innerHTML = `
+        <option value="">
+            Selecione
+        </option>
+    `;
 
-        selectBase.innerHTML += `
+    const polos =
+        obterTodosPolos();
 
-            <option value="${base}">
-                ${base}
-            </option>
+    polos.forEach(polo => {
 
-        `;
+        const option =
+            document.createElement("option");
+
+        option.value = polo;
+        option.textContent = polo;
+
+        selectPolo.appendChild(option);
 
     });
+
+    const poloNormalizado =
+        String(poloSelecionado || "")
+        .trim()
+        .toUpperCase();
+
+    if(poloNormalizado){
+
+        const poloEncontrado =
+            polos.find(polo =>
+
+                String(polo)
+                .trim()
+                .toUpperCase() ===
+                poloNormalizado
+
+            );
+
+        if(poloEncontrado){
+
+            selectPolo.value =
+                poloEncontrado;
+
+        }
+
+    }
+
+}
+
+function atualizarBases(
+    baseSelecionada = ""
+){
+
+    const selectPolo =
+        document.getElementById(
+            "poloEntrada"
+        );
+
+    const selectBase =
+        document.getElementById(
+            "baseEntrada"
+        );
+
+    if(!selectPolo || !selectBase){
+        return;
+    }
+
+    const polo =
+        String(selectPolo.value || "")
+        .trim();
+
+    selectBase.innerHTML = `
+        <option value="">
+            ${
+                polo
+                ? "Selecione"
+                : "Selecione primeiro o Polo"
+            }
+        </option>
+    `;
+
+    if(!polo){
+        return;
+    }
+
+    const bases =
+        obterBasesPorPolo(polo)
+        .slice()
+        .sort(
+            (a, b) =>
+                a.localeCompare(
+                    b,
+                    "pt-BR"
+                )
+        );
+
+    bases.forEach(base => {
+
+        const option =
+            document.createElement("option");
+
+        option.value = base;
+        option.textContent = base;
+
+        selectBase.appendChild(option);
+
+    });
+
+    const baseNormalizada =
+        String(baseSelecionada || "")
+        .trim()
+        .toUpperCase();
+
+    if(baseNormalizada){
+
+        const baseEncontrada =
+            bases.find(base =>
+
+                String(base)
+                .trim()
+                .toUpperCase() ===
+                baseNormalizada
+
+            );
+
+        if(baseEncontrada){
+
+            selectBase.value =
+                baseEncontrada;
+
+        }
+
+    }
 
 }
     
@@ -2352,27 +2506,28 @@ async function carregarUsuario(){
 }
     
     /*entrada de material*/
-    async function abrirEntradaMaterial(){
-
-    carregarPolosEntrada();
+   async function abrirEntradaMaterial(){
 
     const usuario =
-        usuarioLogado && Object.keys(usuarioLogado).length
+        usuarioLogado &&
+        Object.keys(usuarioLogado).length
         ? usuarioLogado
         : (
             typeof getUser === "function"
-            ? getUser()
+            ? getUser() || {}
             : {}
         );
 
     const recebedor =
-        document.getElementById("recebedorEntrada");
+        document.getElementById(
+            "recebedorEntrada"
+        );
 
     if(recebedor){
 
         recebedor.value =
-            usuario?.nome ||
-            usuario?.name ||
+            usuario.nome ||
+            usuario.name ||
             "";
 
         recebedor.readOnly = true;
@@ -2382,34 +2537,31 @@ async function carregarUsuario(){
 
     }
 
-    const poloEntrada =
-        document.getElementById("poloEntrada");
+    const poloUsuario =
+        String(usuario.polo || "")
+        .trim();
 
-    const baseEntrada =
-        document.getElementById("baseEntrada");
+    const baseUsuario =
+        String(usuario.base || "")
+        .trim();
 
-    if(poloEntrada && usuario?.polo){
+    carregarPolosEntrada(
+        poloUsuario
+    );
 
-        poloEntrada.value =
-            String(usuario.polo).toUpperCase();
-
-        atualizarBases();
-
-    }
-
-    if(baseEntrada && usuario?.base){
-
-        baseEntrada.value =
-            String(usuario.base).toUpperCase();
-
-    }
+    atualizarBases(
+        baseUsuario
+    );
 
     const modal =
-        document.getElementById("modalEntradaMaterial");
+        document.getElementById(
+            "modalEntradaMaterial"
+        );
 
     if(modal){
 
-        modal.style.display = "flex";
+        modal.style.display =
+            "flex";
 
     }
 
@@ -4331,25 +4483,45 @@ function fecharConfiguracoes(){
 
 }
 
-function atualizarBasesUsuario(baseSelecionada = ""){
+function atualizarBasesUsuario(
+    baseSelecionada = ""
+){
 
-    const polo =
-    document.getElementById("usuarioPolo").value;
+    const selectPolo =
+        document.getElementById(
+            "usuarioPolo"
+        );
 
     const selectBase =
-    document.getElementById("usuarioBase");
+        document.getElementById(
+            "usuarioBase"
+        );
 
-    selectBase.innerHTML =
-    `<option value="">Selecione</option>`;
-
-    if(!BASES_POR_POLO[polo]){
+    if(!selectPolo || !selectBase){
         return;
     }
 
-    BASES_POR_POLO[polo].forEach(base => {
+    const polo =
+        String(selectPolo.value || "")
+        .trim();
+
+    selectBase.innerHTML = `
+        <option value="">
+            ${
+                polo
+                ? "Selecione"
+                : "Selecione primeiro o Polo"
+            }
+        </option>
+    `;
+
+    const bases =
+        obterBasesPorPolo(polo);
+
+    bases.forEach(base => {
 
         const option =
-        document.createElement("option");
+            document.createElement("option");
 
         option.value = base;
         option.textContent = base;
@@ -4359,7 +4531,29 @@ function atualizarBasesUsuario(baseSelecionada = ""){
     });
 
     if(baseSelecionada){
-        selectBase.value = baseSelecionada;
+
+        const baseNormalizada =
+            String(baseSelecionada)
+            .trim()
+            .toUpperCase();
+
+        const baseEncontrada =
+            bases.find(base =>
+
+                String(base)
+                .trim()
+                .toUpperCase() ===
+                baseNormalizada
+
+            );
+
+        if(baseEncontrada){
+
+            selectBase.value =
+                baseEncontrada;
+
+        }
+
     }
 
 }
