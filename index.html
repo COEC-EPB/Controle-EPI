@@ -1224,6 +1224,34 @@ body{
         grid-column:auto;
     }
 
+}/* ==========================================
+   TABELA DE COLABORADORES / USUÁRIOS
+========================================== */
+
+.tabela-usuarios-scroll{
+    margin-top:20px;
+
+    max-height:420px;
+    overflow-y:auto;
+    overflow-x:auto;
+
+    border:1px solid #E5E7EB;
+    border-radius:12px;
+}
+
+.tabela-usuarios-scroll table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.tabela-usuarios-scroll thead{
+    position:sticky;
+    top:0;
+    z-index:10;
+}
+
+.tabela-usuarios-scroll th{
+    background:#F1F5F9;
 }
 </style>
 
@@ -1517,7 +1545,7 @@ onclick="window.location.href='https://coec-epb.github.io/colaboradores_material
 
     </div>
 
-    <div style="overflow:auto; margin-top:20px;">
+    <div class="tabela-usuarios-scroll">
 
         <table width="100%" style="border-collapse:collapse;">
 
@@ -4899,19 +4927,39 @@ function aplicarEstiloTabela(){
 
 function abrirCadastroMateriais(){
 
-    const painel =
+    const painelUsuarios =
+        document.getElementById(
+            "painelConfiguracoes"
+        );
+
+    const painelMateriais =
         document.getElementById(
             "painelCadastroMateriais"
         );
 
-    if(!painel){
+    if(!painelMateriais){
         return;
     }
 
-    painel.style.display =
+    /*
+     * Esconde configurações / colaboradores
+     */
+
+    if(painelUsuarios){
+
+        painelUsuarios.style.display =
+            "none";
+
+    }
+
+    /*
+     * Abre cadastro de materiais
+     */
+
+    painelMateriais.style.display =
         "block";
 
-    painel.scrollIntoView({
+    painelMateriais.scrollIntoView({
         behavior:"smooth",
         block:"start"
     });
@@ -4922,15 +4970,32 @@ function abrirCadastroMateriais(){
 
 function fecharCadastroMateriais(){
 
-    const painel =
+    const painelMateriais =
         document.getElementById(
             "painelCadastroMateriais"
         );
 
-    if(painel){
+    const painelUsuarios =
+        document.getElementById(
+            "painelConfiguracoes"
+        );
 
-        painel.style.display =
+    if(painelMateriais){
+
+        painelMateriais.style.display =
             "none";
+
+    }
+
+    if(painelUsuarios){
+
+        painelUsuarios.style.display =
+            "block";
+
+        painelUsuarios.scrollIntoView({
+            behavior:"smooth",
+            block:"start"
+        });
 
     }
 
@@ -5961,11 +6026,28 @@ function abrirConfiguracoes(){
 
 function fecharConfiguracoes(){
 
-    const painel =
-        document.getElementById("painelConfiguracoes");
+    const painelUsuarios =
+        document.getElementById(
+            "painelConfiguracoes"
+        );
 
-    if(painel){
-        painel.style.display = "none";
+    const painelMateriais =
+        document.getElementById(
+            "painelCadastroMateriais"
+        );
+
+    if(painelUsuarios){
+
+        painelUsuarios.style.display =
+            "none";
+
+    }
+
+    if(painelMateriais){
+
+        painelMateriais.style.display =
+            "none";
+
     }
 
 }
