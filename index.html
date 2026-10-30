@@ -1050,6 +1050,181 @@ body{
         height:220px;
     }
 }
+    /* =====================================================
+   CADASTRO DE MATERIAIS
+===================================================== */
+
+.catalogo-acoes{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.catalogo-acoes input{
+    height:42px;
+    min-width:280px;
+    padding:0 12px;
+    border:1px solid #DADADA;
+    border-radius:10px;
+    background:#FFFFFF;
+}
+
+.catalogo-acoes select{
+    height:42px;
+    min-width:140px;
+    padding:0 12px;
+    border:1px solid #DADADA;
+    border-radius:10px;
+    background:#FFFFFF;
+}
+
+.catalogo-tabela-wrap{
+    overflow:auto;
+    margin-top:20px;
+    border:1px solid #E5E7EB;
+    border-radius:14px;
+}
+
+.catalogo-tabela{
+    width:100%;
+    min-width:950px;
+    border-collapse:collapse;
+}
+
+.catalogo-tabela thead{
+    background:#F1F5F9;
+}
+
+.catalogo-tabela th{
+    padding:12px;
+    text-align:left;
+    color:#374151;
+    font-size:14px;
+    white-space:nowrap;
+}
+
+.catalogo-tabela td{
+    padding:12px;
+    border-bottom:1px solid #EEEEEE;
+    color:#374151;
+    font-size:14px;
+}
+
+.catalogo-tabela tbody tr:hover{
+    background:#F8FAFC;
+}
+
+.codigo-material{
+    font-weight:800;
+    color:#0369A1;
+    background:#E0F2FE;
+    border-radius:8px;
+    padding:5px 8px;
+    display:inline-block;
+}
+
+.status-material{
+    display:inline-block;
+    padding:5px 10px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:700;
+}
+
+.status-material.ativo{
+    color:#166534;
+    background:#DCFCE7;
+}
+
+.status-material.inativo{
+    color:#991B1B;
+    background:#FEE2E2;
+}
+
+.acoes-material{
+    display:flex;
+    gap:7px;
+    align-items:center;
+    flex-wrap:wrap;
+}
+
+.btn-material-editar{
+    border:none;
+    background:#0097CE;
+    color:#FFFFFF;
+    padding:8px 11px;
+    border-radius:9px;
+    cursor:pointer;
+    font-weight:700;
+}
+
+.btn-material-status{
+    border:none;
+    background:#F1F5F9;
+    color:#111827;
+    padding:8px 11px;
+    border-radius:9px;
+    cursor:pointer;
+    font-weight:700;
+}
+
+.btn-material-excluir{
+    border:none;
+    background:#DC3545;
+    color:#FFFFFF;
+    padding:8px 11px;
+    border-radius:9px;
+    cursor:pointer;
+    font-weight:700;
+}
+
+.btn-material-editar:hover,
+.btn-material-status:hover,
+.btn-material-excluir:hover{
+    opacity:.88;
+}
+
+.material-form-full{
+    grid-column:1 / -1;
+}
+
+.aviso-codigo-material{
+    grid-column:1 / -1;
+    padding:12px 14px;
+    border-radius:12px;
+    background:#EFF8FF;
+    border-left:5px solid #0097CE;
+    color:#075985;
+    font-size:14px;
+    line-height:1.5;
+}
+
+.carregando-catalogo{
+    padding:20px;
+    text-align:center;
+    color:#64748B;
+}
+
+@media(max-width:700px){
+
+    .catalogo-acoes{
+        display:grid;
+        grid-template-columns:1fr;
+    }
+
+    .catalogo-acoes input,
+    .catalogo-acoes select,
+    .catalogo-acoes button{
+        width:100%;
+        min-width:0;
+    }
+
+    .material-form-full{
+        grid-column:auto;
+    }
+
+}
 </style>
 
 </head>
@@ -1115,7 +1290,7 @@ onclick="fecharMenuMobile()">
         </a>
 
 
-        <a javascript:void(0) onclick="abrirConfiguracoes()">
+        <a href="javascript:void(0)" onclick="abrirConfiguracoes()">
     <i class="bi bi-gear"></i>
     Configurações
 </a>
@@ -1325,6 +1500,14 @@ onclick="window.location.href='https://coec-epb.github.io/colaboradores_material
             </button>
 
             <button
+    class="btn-salvar"
+    onclick="abrirCadastroMateriais()">
+
+    📦 Cadastro de materiais
+
+</button>
+
+            <button
                 class="btn-cancelar"
                 onclick="fecharConfiguracoes()">
                 Fechar
@@ -1370,6 +1553,378 @@ onclick="window.location.href='https://coec-epb.github.io/colaboradores_material
     </div>
 
 </section>
+    <!-- =====================================================
+     PAINEL DE CADASTRO DE MATERIAIS
+===================================================== -->
+
+<section
+    class="box"
+    id="painelCadastroMateriais"
+    style="display:none; margin-top:25px;">
+
+    <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:flex-start;
+        gap:15px;
+        flex-wrap:wrap;
+    ">
+
+        <div>
+
+            <h3>
+                <i class="bi bi-box-seam"></i>
+                Cadastro de Materiais
+            </h3>
+
+            <small>
+                Adicione, edite, ative ou desative códigos de materiais.
+            </small>
+
+        </div>
+
+        <div class="catalogo-acoes">
+
+            <input
+                type="text"
+                id="pesquisaMaterialCatalogo"
+                placeholder="Pesquisar código ou descrição..."
+                autocomplete="off">
+
+            <select id="filtroCategoriaMaterial">
+
+                <option value="">
+                    Todas as categorias
+                </option>
+
+                <option value="EPI">
+                    EPI
+                </option>
+
+                <option value="EPC">
+                    EPC
+                </option>
+
+                <option value="FERRAMENTAL">
+                    Ferramental
+                </option>
+
+                <option value="ESTOQUE">
+                    Estoque
+                </option>
+
+            </select>
+
+            <select id="filtroStatusMaterial">
+
+                <option value="">
+                    Todos os status
+                </option>
+
+                <option value="1">
+                    Ativos
+                </option>
+
+                <option value="0">
+                    Inativos
+                </option>
+
+            </select>
+
+            <button
+                type="button"
+                class="btn-salvar"
+                onclick="carregarMateriaisCatalogo()">
+
+                <i class="bi bi-search"></i>
+                Buscar
+
+            </button>
+
+            <button
+                type="button"
+                class="btn-salvar"
+                onclick="abrirModalMaterial()">
+
+                <i class="bi bi-plus-circle"></i>
+                Novo material
+
+            </button>
+
+            <button
+                type="button"
+                class="btn-cancelar"
+                onclick="limparFiltrosCatalogoMateriais()">
+
+                Limpar
+
+            </button>
+
+            <button
+                type="button"
+                class="btn-cancelar"
+                onclick="fecharCadastroMateriais()">
+
+                Fechar
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <div
+        id="resumoCatalogoMateriais"
+        style="
+            margin-top:18px;
+            color:#64748B;
+            font-size:14px;
+        ">
+
+        Nenhum material carregado.
+
+    </div>
+
+    <div class="catalogo-tabela-wrap">
+
+        <table class="catalogo-tabela">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Código atual
+                    </th>
+
+                    <th>
+                        Descrição
+                    </th>
+
+                    <th>
+                        Categoria
+                    </th>
+
+                    <th>
+                        Código anterior
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                    <th>
+                        Atualizado em
+                    </th>
+
+                    <th>
+                        Ações
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="tabelaMateriaisCatalogo">
+
+                <tr>
+
+                    <td
+                        colspan="7"
+                        class="carregando-catalogo">
+
+                        Clique em Buscar para carregar os materiais.
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+    <!-- =====================================================
+     MODAL DE CADASTRO DE MATERIAL
+===================================================== -->
+
+<div
+    class="modal-overlay"
+    id="modalMaterialCatalogo">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2 id="tituloModalMaterial">
+                    📦 Novo material
+                </h2>
+
+                <small id="subtituloModalMaterial">
+                    Cadastre um novo código de material.
+                </small>
+
+            </div>
+
+            <button
+                type="button"
+                class="fechar-modal"
+                onclick="fecharModalMaterial()">
+
+                ×
+
+            </button>
+
+        </div>
+
+        <input
+            type="hidden"
+            id="materialCatalogoId">
+
+        <input
+            type="hidden"
+            id="materialCatalogoModo"
+            value="novo">
+
+        <div class="form-grid">
+
+            <div>
+
+                <label for="materialCatalogoCodigo">
+                    Código atual
+                </label>
+
+                <input
+                    type="text"
+                    id="materialCatalogoCodigo"
+                    placeholder="Ex.: 710303"
+                    autocomplete="off">
+
+            </div>
+
+            <div>
+
+                <label for="materialCatalogoCodigoAnterior">
+                    Código anterior
+                </label>
+
+                <input
+                    type="text"
+                    id="materialCatalogoCodigoAnterior"
+                    placeholder="Opcional"
+                    autocomplete="off">
+
+            </div>
+
+            <div class="material-form-full">
+
+                <label for="materialCatalogoDescricao">
+                    Descrição do material
+                </label>
+
+                <input
+                    type="text"
+                    id="materialCatalogoDescricao"
+                    placeholder="Ex.: CAMISA M ANTICHAMA DISTR M03"
+                    autocomplete="off">
+
+            </div>
+
+            <div>
+
+                <label for="materialCatalogoCategoria">
+                    Categoria
+                </label>
+
+                <select id="materialCatalogoCategoria">
+
+                    <option value="EPI">
+                        EPI
+                    </option>
+
+                    <option value="EPC">
+                        EPC
+                    </option>
+
+                    <option value="FERRAMENTAL">
+                        Ferramental
+                    </option>
+
+                    <option value="ESTOQUE">
+                        Estoque
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div>
+
+                <label for="materialCatalogoAtivo">
+                    Status
+                </label>
+
+                <select id="materialCatalogoAtivo">
+
+                    <option value="1">
+                        Ativo
+                    </option>
+
+                    <option value="0">
+                        Inativo
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="aviso-codigo-material">
+
+                <strong>
+                    Atenção:
+                </strong>
+
+                quando um código for substituído, informe o novo código em
+                <b>Código atual</b> e mantenha o antigo em
+                <b>Código anterior</b>. Isso facilita pesquisas futuras e
+                preserva a referência histórica.
+
+            </div>
+
+        </div>
+
+        <div class="modal-footer">
+
+            <button
+                type="button"
+                class="btn-cancelar"
+                onclick="fecharModalMaterial()">
+
+                Cancelar
+
+            </button>
+
+            <button
+                type="button"
+                class="btn-salvar"
+                id="btnSalvarMaterialCatalogo"
+                onclick="salvarMaterialCatalogo()">
+
+                <i class="bi bi-check-circle"></i>
+                Salvar material
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
 
     <div class="modal-overlay" id="modalUsuarioSistema">
 
@@ -1901,30 +2456,7 @@ id="modalHistoricoTroca">
 ];
 
     
- function selecionarMaterial(material){
 
-    const partes =
-        material.split(" - ");
-
-    const codigo =
-        partes.shift();
-
-    const descricao =
-        partes.join(" - ");
-
-    document.getElementById(
-        "materialEntrada"
-    ).value = descricao;
-
-    document.getElementById(
-        "codigoEntrada"
-    ).value = codigo;
-
-    document.getElementById(
-        "sugestoesMateriais"
-    ).style.display = "none";
-
-}
     function abrirMenuMobile(){
 
     document
@@ -1949,66 +2481,243 @@ function fecharMenuMobile(){
 
 }
 
+let timerBuscaCatalogo = null;
+
 function buscarMaterial(){
 
-    const texto =
-        document.getElementById("materialEntrada")
-        .value
-        .toLowerCase()
-        .trim();
+    clearTimeout(
+        timerBuscaCatalogo
+    );
+
+    timerBuscaCatalogo =
+        setTimeout(
+            buscarMaterialNoCatalogo,
+            300
+        );
+
+}
+
+async function buscarMaterialNoCatalogo(){
+
+    const campo =
+        document.getElementById(
+            "materialEntrada"
+        );
 
     const box =
-        document.getElementById("sugestoesMateriais");
+        document.getElementById(
+            "sugestoesMateriais"
+        );
 
-    if(!texto){
+    if(!campo || !box){
+        return;
+    }
 
+    const pesquisa =
+        campo.value.trim();
+
+    if(pesquisa.length < 2){
+
+        box.innerHTML = "";
         box.style.display = "none";
+
         return;
 
     }
 
-    const encontrados =
-        MATERIAIS.filter(item =>
-            item.toLowerCase().includes(texto)
-        ).slice(0,30);
+    try{
 
-    box.innerHTML =
-        encontrados.map(material => {
+        const params =
+            new URLSearchParams();
 
-            const partes =
-                material.split(" - ");
+        params.set(
+            "q",
+            pesquisa
+        );
 
-            const codigo =
-                partes.shift() || "";
+        params.set(
+            "ativo",
+            "1"
+        );
 
-            const descricao =
-                partes.join(" - ");
+        params.set(
+            "limit",
+            "30"
+        );
 
-            return `
+        const resp =
+            await authFetch(
+                `${API}/materiais-catalogo?${params.toString()}`
+            );
+
+        const json =
+            await resp.json()
+            .catch(() => ({}));
+
+        if(
+            !resp.ok ||
+            json.sucesso === false
+        ){
+
+            throw new Error(
+                json.mensagem ||
+                "Erro ao consultar materiais."
+            );
+
+        }
+
+        const lista =
+            json.dados || [];
+
+        if(!lista.length){
+
+            box.innerHTML = `
+                <div class="sugestao-item">
+                    Nenhum material encontrado.
+                </div>
+            `;
+
+            box.style.display = "block";
+
+            return;
+
+        }
+
+        box.innerHTML =
+            lista.map(item => `
 
                 <div
                     class="sugestao-item"
-                    onclick="selecionarMaterial('${material.replace(/'/g,"\\'")}')"
-                >
+                    data-material-id="${Number(item.id)}">
 
                     <div class="sugestao-codigo">
-                        ${codigo}
+                        ${escaparHTMLLocal(
+                            item.codigo || ""
+                        )}
                     </div>
 
                     <div class="sugestao-descricao">
-                        ${descricao}
+
+                        <strong>
+                            ${escaparHTMLLocal(
+                                item.descricao || ""
+                            )}
+                        </strong>
+
+                        <small>
+                            ${escaparHTMLLocal(
+                                item.categoria || ""
+                            )}
+                        </small>
+
                     </div>
 
                 </div>
 
-            `;
+            `).join("");
 
-        }).join("");
+        box.querySelectorAll(
+            "[data-material-id]"
+        )
+        .forEach(elemento => {
 
-    box.style.display =
-        encontrados.length
-        ? "block"
-        : "none";
+            elemento.addEventListener(
+                "click",
+                function(){
+
+                    const id =
+                        Number(
+                            elemento.dataset.materialId
+                        );
+
+                    const material =
+                        lista.find(
+                            item =>
+                                Number(item.id) === id
+                        );
+
+                    if(!material){
+                        return;
+                    }
+
+                    selecionarMaterialCatalogo(
+                        material
+                    );
+
+                }
+            );
+
+        });
+
+        box.style.display = "block";
+
+    }catch(erro){
+
+        console.error(erro);
+
+        box.innerHTML = `
+            <div class="sugestao-item">
+                ${escaparHTMLLocal(
+                    erro.message
+                )}
+            </div>
+        `;
+
+        box.style.display = "block";
+
+    }
+
+}
+
+function selecionarMaterialCatalogo(material){
+
+    const campoMaterial =
+        document.getElementById(
+            "materialEntrada"
+        );
+
+    const campoCodigo =
+        document.getElementById(
+            "codigoEntrada"
+        );
+
+    const campoCategoria =
+        document.getElementById(
+            "categoriaEntrada"
+        );
+
+    const box =
+        document.getElementById(
+            "sugestoesMateriais"
+        );
+
+    if(campoMaterial){
+
+        campoMaterial.value =
+            material.descricao || "";
+
+    }
+
+    if(campoCodigo){
+
+        campoCodigo.value =
+            material.codigo || "";
+
+    }
+
+    if(campoCategoria){
+
+        campoCategoria.value =
+            material.categoria || "EPI";
+
+    }
+
+    if(box){
+
+        box.innerHTML = "";
+        box.style.display = "none";
+
+    }
 
 }
 
@@ -4184,6 +4893,757 @@ function aplicarEstiloTabela(){
             subtree:true
         }
     );
+
+}
+    let materiaisCatalogoCache = [];
+
+function abrirCadastroMateriais(){
+
+    const painel =
+        document.getElementById(
+            "painelCadastroMateriais"
+        );
+
+    if(!painel){
+        return;
+    }
+
+    painel.style.display =
+        "block";
+
+    painel.scrollIntoView({
+        behavior:"smooth",
+        block:"start"
+    });
+
+    carregarMateriaisCatalogo();
+
+}
+
+function fecharCadastroMateriais(){
+
+    const painel =
+        document.getElementById(
+            "painelCadastroMateriais"
+        );
+
+    if(painel){
+
+        painel.style.display =
+            "none";
+
+    }
+
+}
+
+async function carregarMateriaisCatalogo(){
+
+    const tbody =
+        document.getElementById(
+            "tabelaMateriaisCatalogo"
+        );
+
+    const resumo =
+        document.getElementById(
+            "resumoCatalogoMateriais"
+        );
+
+    if(!tbody){
+        return;
+    }
+
+    tbody.innerHTML = `
+        <tr>
+            <td
+                colspan="7"
+                class="carregando-catalogo">
+
+                Carregando materiais...
+
+            </td>
+        </tr>
+    `;
+
+    try{
+
+        const pesquisa =
+            String(
+                document.getElementById(
+                    "pesquisaMaterialCatalogo"
+                )?.value || ""
+            ).trim();
+
+        const categoria =
+            String(
+                document.getElementById(
+                    "filtroCategoriaMaterial"
+                )?.value || ""
+            ).trim();
+
+        const ativo =
+            String(
+                document.getElementById(
+                    "filtroStatusMaterial"
+                )?.value ?? ""
+            ).trim();
+
+        const params =
+            new URLSearchParams();
+
+        params.set(
+            "limit",
+            "300"
+        );
+
+        if(pesquisa){
+
+            params.set(
+                "q",
+                pesquisa
+            );
+
+        }
+
+        if(categoria){
+
+            params.set(
+                "categoria",
+                categoria
+            );
+
+        }
+
+        if(
+            ativo === "0" ||
+            ativo === "1"
+        ){
+
+            params.set(
+                "ativo",
+                ativo
+            );
+
+        }
+
+        const resp =
+            await authFetch(
+                `${API}/materiais-catalogo?${params.toString()}`
+            );
+
+        const json =
+            await resp.json()
+            .catch(() => ({}));
+
+        if(
+            !resp.ok ||
+            json.sucesso === false
+        ){
+
+            throw new Error(
+                json.mensagem ||
+                "Erro ao consultar materiais."
+            );
+
+        }
+
+        materiaisCatalogoCache =
+            json.dados || [];
+
+        if(resumo){
+
+            resumo.textContent =
+                `${materiaisCatalogoCache.length} material(is) encontrado(s).`;
+
+        }
+
+        renderMateriaisCatalogo();
+
+    }catch(erro){
+
+        console.error(erro);
+
+        if(resumo){
+
+            resumo.textContent =
+                "Erro ao carregar o catálogo.";
+
+        }
+
+        tbody.innerHTML = `
+            <tr>
+                <td
+                    colspan="7"
+                    style="
+                        padding:15px;
+                        text-align:center;
+                        color:#dc3545;
+                    ">
+
+                    ${escaparHTMLLocal(
+                        erro.message
+                    )}
+
+                </td>
+            </tr>
+        `;
+
+    }
+
+}
+
+function renderMateriaisCatalogo(){
+
+    const tbody =
+        document.getElementById(
+            "tabelaMateriaisCatalogo"
+        );
+
+    if(!tbody){
+        return;
+    }
+
+    if(!materiaisCatalogoCache.length){
+
+        tbody.innerHTML = `
+            <tr>
+                <td
+                    colspan="7"
+                    class="carregando-catalogo">
+
+                    Nenhum material encontrado.
+
+                </td>
+            </tr>
+        `;
+
+        return;
+
+    }
+
+    tbody.innerHTML =
+        materiaisCatalogoCache
+        .map(item => {
+
+            const ativo =
+                Number(item.ativo) === 1;
+
+            let atualizadoEm = "-";
+
+            if(item.atualizado_em){
+
+                const data =
+                    new Date(
+                        item.atualizado_em
+                    );
+
+                if(!isNaN(data.getTime())){
+
+                    atualizadoEm =
+                        data.toLocaleString(
+                            "pt-BR"
+                        );
+
+                }
+
+            }
+
+            return `
+                <tr>
+
+                    <td>
+
+                        <span class="codigo-material">
+                            ${escaparHTMLLocal(
+                                item.codigo || ""
+                            )}
+                        </span>
+
+                    </td>
+
+                    <td>
+                        ${escaparHTMLLocal(
+                            item.descricao || ""
+                        )}
+                    </td>
+
+                    <td>
+                        ${escaparHTMLLocal(
+                            item.categoria || ""
+                        )}
+                    </td>
+
+                    <td>
+                        ${escaparHTMLLocal(
+                            item.codigo_anterior || "-"
+                        )}
+                    </td>
+
+                    <td>
+
+                        <span class="status-material ${
+                            ativo
+                            ? "ativo"
+                            : "inativo"
+                        }">
+
+                            ${
+                                ativo
+                                ? "Ativo"
+                                : "Inativo"
+                            }
+
+                        </span>
+
+                    </td>
+
+                    <td>
+                        ${escaparHTMLLocal(
+                            atualizadoEm
+                        )}
+                    </td>
+
+                    <td>
+
+                        <div class="acoes-material">
+
+                            <button
+                                type="button"
+                                class="btn-material-editar"
+                                onclick="editarMaterialCatalogo(${Number(item.id)})">
+
+                                Editar
+
+                            </button>
+
+                            <button
+                                type="button"
+                                class="btn-material-status"
+                                onclick="alterarStatusMaterialCatalogo(
+                                    ${Number(item.id)},
+                                    ${ativo ? 0 : 1}
+                                )">
+
+                                ${
+                                    ativo
+                                    ? "Desativar"
+                                    : "Ativar"
+                                }
+
+                            </button>
+
+                            <button
+                                type="button"
+                                class="btn-material-excluir"
+                                onclick="excluirMaterialCatalogo(${Number(item.id)})">
+
+                                Excluir
+
+                            </button>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+            `;
+
+        })
+        .join("");
+
+}
+
+function abrirModalMaterial(){
+
+    document.getElementById(
+        "tituloModalMaterial"
+    ).innerText =
+        "📦 Novo material";
+
+    document.getElementById(
+        "subtituloModalMaterial"
+    ).innerText =
+        "Cadastre um novo código de material.";
+
+    document.getElementById(
+        "materialCatalogoModo"
+    ).value =
+        "novo";
+
+    document.getElementById(
+        "materialCatalogoId"
+    ).value =
+        "";
+
+    document.getElementById(
+        "materialCatalogoCodigo"
+    ).value =
+        "";
+
+    document.getElementById(
+        "materialCatalogoCodigoAnterior"
+    ).value =
+        "";
+
+    document.getElementById(
+        "materialCatalogoDescricao"
+    ).value =
+        "";
+
+    document.getElementById(
+        "materialCatalogoCategoria"
+    ).value =
+        "EPI";
+
+    document.getElementById(
+        "materialCatalogoAtivo"
+    ).value =
+        "1";
+
+    document.getElementById(
+        "modalMaterialCatalogo"
+    ).style.display =
+        "flex";
+
+}
+
+function editarMaterialCatalogo(id){
+
+    const material =
+        materiaisCatalogoCache.find(
+            item =>
+                Number(item.id) === Number(id)
+        );
+
+    if(!material){
+
+        alert(
+            "Material não encontrado."
+        );
+
+        return;
+
+    }
+    document.getElementById(
+    "materialCatalogoAtivo"
+).value =
+    Number(material.ativo) === 1
+    ? "1"
+    : "0";
+
+    document.getElementById(
+        "tituloModalMaterial"
+    ).innerText =
+        "✏️ Editar material";
+
+    document.getElementById(
+        "materialCatalogoModo"
+    ).value =
+        "editar";
+
+    document.getElementById(
+        "materialCatalogoId"
+    ).value =
+        material.id;
+
+    document.getElementById(
+        "materialCatalogoCodigo"
+    ).value =
+        material.codigo || "";
+
+    document.getElementById(
+        "materialCatalogoCodigoAnterior"
+    ).value =
+        material.codigo_anterior || "";
+
+    document.getElementById(
+        "materialCatalogoDescricao"
+    ).value =
+        material.descricao || "";
+
+    document.getElementById(
+        "materialCatalogoCategoria"
+    ).value =
+        material.categoria || "EPI";
+
+    document.getElementById(
+        "modalMaterialCatalogo"
+    ).style.display =
+        "flex";
+
+}
+
+function fecharModalMaterial(){
+
+    document.getElementById(
+        "modalMaterialCatalogo"
+    ).style.display =
+        "none";
+
+}
+
+async function salvarMaterialCatalogo(){
+
+    const modo =
+        document.getElementById(
+            "materialCatalogoModo"
+        ).value;
+
+    const id =
+        document.getElementById(
+            "materialCatalogoId"
+        ).value;
+
+    const payload = {
+
+    codigo:
+        document.getElementById(
+            "materialCatalogoCodigo"
+        ).value.trim(),
+
+    codigo_anterior:
+        document.getElementById(
+            "materialCatalogoCodigoAnterior"
+        ).value.trim(),
+
+    descricao:
+        document.getElementById(
+            "materialCatalogoDescricao"
+        ).value.trim(),
+
+    categoria:
+        document.getElementById(
+            "materialCatalogoCategoria"
+        ).value,
+
+    ativo:
+        Number(
+            document.getElementById(
+                "materialCatalogoAtivo"
+            ).value
+        )
+
+};
+
+    if(!payload.codigo){
+
+        alert(
+            "Informe o código."
+        );
+
+        return;
+
+    }
+
+    if(!payload.descricao){
+
+        alert(
+            "Informe a descrição."
+        );
+
+        return;
+
+    }
+
+    const url =
+        modo === "novo"
+        ? `${API}/materiais-catalogo`
+        : `${API}/materiais-catalogo/${id}`;
+
+    const metodo =
+        modo === "novo"
+        ? "POST"
+        : "PUT";
+
+    try{
+
+        const resp =
+            await authFetch(
+                url,
+                {
+                    method:metodo,
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+                    body:
+                        JSON.stringify(payload)
+                }
+            );
+
+        const json =
+            await resp.json()
+            .catch(() => ({}));
+
+        if(
+            !resp.ok ||
+            json.sucesso === false
+        ){
+
+            throw new Error(
+                json.mensagem ||
+                "Erro ao salvar material."
+            );
+
+        }
+
+        alert(
+            "✅ Material salvo com sucesso."
+        );
+
+        fecharModalMaterial();
+
+        await carregarMateriaisCatalogo();
+
+    }catch(erro){
+
+        console.error(erro);
+
+        alert(
+            "❌ " + erro.message
+        );
+
+    }
+
+}
+    async function limparFiltrosCatalogoMateriais(){
+
+    const pesquisa =
+        document.getElementById(
+            "pesquisaMaterialCatalogo"
+        );
+
+    const categoria =
+        document.getElementById(
+            "filtroCategoriaMaterial"
+        );
+
+    const status =
+        document.getElementById(
+            "filtroStatusMaterial"
+        );
+
+    if(pesquisa){
+        pesquisa.value = "";
+    }
+
+    if(categoria){
+        categoria.value = "";
+    }
+
+    if(status){
+        status.value = "";
+    }
+
+    await carregarMateriaisCatalogo();
+
+}
+
+async function alterarStatusMaterialCatalogo(
+    id,
+    ativo
+){
+
+    try{
+
+        const resp =
+            await authFetch(
+                `${API}/materiais-catalogo/${id}/status`,
+                {
+                    method:"PUT",
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+                    body:
+                        JSON.stringify({
+                            ativo
+                        })
+                }
+            );
+
+        const json =
+            await resp.json()
+            .catch(() => ({}));
+
+        if(
+            !resp.ok ||
+            json.sucesso === false
+        ){
+
+            throw new Error(
+                json.mensagem ||
+                "Erro ao alterar material."
+            );
+
+        }
+
+        await carregarMateriaisCatalogo();
+
+    }catch(erro){
+
+        console.error(erro);
+
+        alert(
+            "❌ " + erro.message
+        );
+
+    }
+
+}
+
+async function excluirMaterialCatalogo(id){
+
+    const confirmar =
+        confirm(
+            "Deseja realmente excluir este material?\n\n" +
+            "Se ele já possuir movimentações, o sistema não permitirá a exclusão."
+        );
+
+    if(!confirmar){
+        return;
+    }
+
+    try{
+
+        const resp =
+            await authFetch(
+                `${API}/materiais-catalogo/${id}`,
+                {
+                    method:"DELETE"
+                }
+            );
+
+        const json =
+            await resp.json()
+            .catch(() => ({}));
+
+        if(
+            !resp.ok ||
+            json.sucesso === false
+        ){
+
+            throw new Error(
+                json.mensagem ||
+                "Erro ao excluir material."
+            );
+
+        }
+
+        alert(
+            "✅ Material excluído."
+        );
+
+        await carregarMateriaisCatalogo();
+
+    }catch(erro){
+
+        console.error(erro);
+
+        alert(
+            "❌ " + erro.message
+        );
+
+    }
 
 }
 
