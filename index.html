@@ -1080,10 +1080,18 @@ body{
 }
 
 .catalogo-tabela-wrap{
-    overflow:auto;
     margin-top:20px;
+
+    height:420px;
+    max-height:420px;
+
+    overflow-y:auto;
+    overflow-x:auto;
+
     border:1px solid #E5E7EB;
-    border-radius:14px;
+    border-radius:12px;
+
+    background:#fff;
 }
 
 .catalogo-tabela{
@@ -1093,15 +1101,18 @@ body{
 }
 
 .catalogo-tabela thead{
+    position:sticky;
+    top:0;
+    z-index:10;
     background:#F1F5F9;
 }
-
 .catalogo-tabela th{
     padding:12px;
     text-align:left;
     color:#374151;
     font-size:14px;
     white-space:nowrap;
+    background:#F1F5F9;
 }
 
 .catalogo-tabela td{
@@ -1231,12 +1242,16 @@ body{
 .tabela-usuarios-scroll{
     margin-top:20px;
 
+    height:420px;
     max-height:420px;
+
     overflow-y:auto;
     overflow-x:auto;
 
     border:1px solid #E5E7EB;
     border-radius:12px;
+
+    background:#fff;
 }
 
 .tabela-usuarios-scroll table{
@@ -1609,6 +1624,20 @@ onclick="window.location.href='https://coec-epb.github.io/colaboradores_material
                 Adicione, edite, ative ou desative códigos de materiais.
             </small>
 
+            <div style="margin-top:12px;">
+
+    <button
+        type="button"
+        class="btn-cancelar"
+        onclick="voltarParaUsuarios()">
+
+        <i class="bi bi-arrow-left"></i>
+        Voltar para usuários
+
+    </button>
+
+</div>
+
         </div>
 
         <div class="catalogo-acoes">
@@ -1659,7 +1688,7 @@ onclick="window.location.href='https://coec-epb.github.io/colaboradores_material
 
             </select>
 
-            <button
+                <button
                 type="button"
                 class="btn-salvar"
                 onclick="carregarMateriaisCatalogo()">
@@ -4967,8 +4996,7 @@ function abrirCadastroMateriais(){
     carregarMateriaisCatalogo();
 
 }
-
-function fecharCadastroMateriais(){
+    function voltarParaUsuarios(){
 
     const painelMateriais =
         document.getElementById(
@@ -4998,6 +5026,33 @@ function fecharCadastroMateriais(){
         });
 
     }
+
+}
+
+function fecharCadastroMateriais(){
+
+    const materiais =
+        document.getElementById(
+            "painelCadastroMateriais"
+        );
+
+    const usuarios =
+        document.getElementById(
+            "painelConfiguracoes"
+        );
+
+    if(materiais){
+        materiais.style.display = "none";
+    }
+
+    if(usuarios){
+        usuarios.style.display = "none";
+    }
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
 
 }
 
